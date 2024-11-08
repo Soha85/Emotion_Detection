@@ -25,7 +25,7 @@ class Classify:
     def PreprocessData(self,Tweet):
         Tweet =  re.sub(r"http:\S+", '', Tweet)
         Tweet = emoji.demojize(Tweet)
-        Tweet = re.sub(r'[' + string.punctuation + ']', '', Tweet)
+        Tweet = Tweet.translate(str.maketrans('', '',string.punctuation))
         return Tweet
     def SplitHashTags(self,Tweet):
         return re.findall(r"#(\w+)",Tweet)

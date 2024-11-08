@@ -32,7 +32,7 @@ with col2:
     st.write("**Bert + CNN Model**")
     test_size = st.number_input("Test Size", min_value=0.1, max_value=0.5, step=0.1)
     if st.button("Split Data"):
-        train_loader,test_loader,labels_n = c.TrainPreparing(Tweets["embedding"],labels,test_size)
+        train_loader,test_loader,labels_n = c.TrainPreparing(Tweets["embedding"].tolist(),labels,test_size)
         st.write("Data Splitted")
         model,criterion,optimizer = c.BuildModel(768,labels_n)
         st.write("Model Built")
