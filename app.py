@@ -12,7 +12,7 @@ with col1:
         c = Classify()
         Tweets,labels = c.loadData()
         st.write(len(Tweets),"record loaded")
-        st.write(len(labels),"labels are:",','.join(st.write(labels)))
+        st.write(len(labels),"labels are:",','.join(labels))
     else:
         st.write("No Data Loaded")
 
