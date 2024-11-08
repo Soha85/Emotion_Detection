@@ -13,13 +13,14 @@ if "tweets" not in st.session_state:
 if "embeddings" not in st.session_state:
     st.session_state.embeddings = None
 
-c = Classify()
+
 with col1:
     st.write("**Loading + Preprocessing Data**")
     if st.button('Load Data'):
         st.write("Data Loaded")
 
         try:
+            c = Classify()
             Tweets,labels = c.loadData()
             st.session_state.tweets=Tweets
             st.session_state.labels=labels
@@ -42,11 +43,12 @@ with col1:
 
 with col2:
     st.write("**Bert + CNN Model**")
-    # if st.button("Split Data"):
-    #     test_size = st.number_input("Test Size", min_value=0.1, max_value=0.5, step=0.1)
-    #     if not st.session_state.embeddings.empty:
-    #         train_loader,test_loader,labels_n = c.TrainPreparing(embeddings,Tweets[labels],test_size)
-    #         st.write("Data Splitted")
+    c = Classify()
+    if st.button("Split Data"):
+         test_size = st.number_input("Test Size", min_value=0.1, max_value=0.5, step=0.1)
+         if not st.session_state.embeddings.empty:
+             train_loader,test_loader,labels_n = c.TrainPreparing(embeddings,Tweets[labels],test_size)
+             st.write("Data Splitted")
     #         model,criterion,optimizer = c.BuildModel(768,labels_n)
     #         st.write("Model Built")
     #         num_epochs = st.number_input("Epochs", min_value=10, max_value=50, step=5)
