@@ -14,7 +14,9 @@ with col1:
             Tweets,labels = c.loadData()
             st.write(len(Tweets),"record loaded")
             st.write(len(labels),"labels are:",','.join(labels))
-            Tweets["embedding"]=Tweets.apply(lambda x: c.Emdedding(x))
+            Tweets["Cleaned"] = Tweets["Tweet"].apply(lambda x: c.PreprocessData(x))
+            st.write(len(Tweets), "record Cleaned from URLs, Emojis, and Punctuation")
+            Tweets["embedding"]=Tweets["Cleaned"].apply(lambda x: c.Emdedding(x))
             st.write(len(Tweets), "record Embedded")
         except Exception as e:
             st.write(e)
