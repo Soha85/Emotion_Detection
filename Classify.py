@@ -2,7 +2,6 @@ import pandas as pd
 import torch
 from transformers import BertTokenizer, BertModel
 import re
-from emoji import UNICODE_EMOJI
 import emoji
 import string
 # Load pre-trained BERT tokenizer and model
