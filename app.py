@@ -19,10 +19,10 @@ with col1:
             st.write(Tweets.head(2))
             Tweets["Cleaned"] = Tweets["Tweet"].apply(lambda x: c.PreprocessData(x))
             st.write(len(Tweets), "record Cleaned from URLs, Emojis, and Punctuation")
-            st.write(Tweets.head(2))
+            st.write(Tweets["Cleaned"].head(2))
             Tweets["embedding"]=Tweets["Cleaned"].apply(lambda x: c.Emdedding(x))
             st.write(len(Tweets), "record Embedded")
-            st.write(Tweets.head(2))
+            st.write(Tweets["embedding"].head(2))
         except Exception as e:
             st.error(e)
     else:
