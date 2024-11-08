@@ -31,7 +31,7 @@ with col1:
 
 with col2:
     st.write("**Bert + CNN Model**")
-    if(len(embeddings)>0):
+    if not embeddings:
         test_size = st.number_input("Test Size", min_value=0.1, max_value=0.5, step=0.1)
         if st.button("Split Data"):
             train_loader,test_loader,labels_n = c.TrainPreparing(embeddings,Tweets[labels],test_size)
