@@ -17,7 +17,7 @@ tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
 model = BertModel.from_pretrained('bert-base-uncased')
 class Classify:
     def __init__(self):
-        return
+        return 0
 
     def loadData(self):
         Tweets = pd.read_csv('2018-E-c-En-train.csv')
