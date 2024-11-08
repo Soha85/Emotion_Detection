@@ -21,7 +21,7 @@ with col1:
             Tweets["Cleaned"] = Tweets["Tweet"].apply(lambda x: c.PreprocessData(x))
             st.write(len(Tweets), "record Cleaned from URLs, Emojis, and Punctuation")
             st.write(Tweets["Cleaned"].head(2))
-            embeddings=c.Emdedding(Tweets["Cleaned"])
+            embeddings=c.Emdedding(Tweets["Cleaned"].tolist())
             st.write(len(embeddings), "record Embedded")
             st.write(embeddings[0])
         except Exception as e:
