@@ -5,23 +5,38 @@ st.set_page_config(layout="wide")
 st.title("Emotion Detection")
 # Split the down part into three vertical columns
 col1, col2 = st.columns(2)
-
+Tweets,labels=[],[]
+c = Classify()
 with col1:
+    st.write("**Loading + Preprocessing Model**")
     if st.button('Load Data'):
         st.write("Data Loaded")
-        c = Classify()
+
         try:
             Tweets,labels = c.loadData()
             st.write(len(Tweets),"record loaded")
-            st.write(len(labels),"labels are:",','.join(labels))
+            st.write(len(labels),"labels are:",', '.join(labels))
+            st.write(Tweets.head(2))
             Tweets["Cleaned"] = Tweets["Tweet"].apply(lambda x: c.PreprocessData(x))
             st.write(len(Tweets), "record Cleaned from URLs, Emojis, and Punctuation")
+            st.write(Tweets.head(2))
             Tweets["embedding"]=Tweets["Cleaned"].apply(lambda x: c.Emdedding(x))
             st.write(len(Tweets), "record Embedded")
+            st.write(Tweets.head(2))
         except Exception as e:
-            st.write(e)
+            st.error(e)
     else:
         st.write("No Data Loaded")
 
 with col2:
-    st.write("Another Column")
+    st.write("**Bert + CNN Model**")
+    test_size = st.number_input("Test Size", min_value=0.1, max_value=0.5, step=0.1)
+    if st.button("Split Data"):
+        train_loader,test_loader,labels_n = c.TrainPreparing(Tweets["embedding"],labels,test_size)
+        st.write("Data Splitted")
+        model,criterion,optimizer = c.BuildModel(768,labels_n)
+        st.write("Model Built")
+        num_epochs = st.number_input("Epochs", min_value=10, max_value=50, step=5)
+        model = c.TrainModel(model,criterion,optimizer,num_epochs, train_loader)
+        st.write("Model Trained")
+        st.write("Result of Testing Model:", c.TestModel(model,test_loader))
