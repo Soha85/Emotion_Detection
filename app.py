@@ -21,9 +21,9 @@ with col1:
             Tweets["Cleaned"] = Tweets["Tweet"].apply(lambda x: c.PreprocessData(x))
             st.write(len(Tweets), "record Cleaned from URLs, Emojis, and Punctuation")
             st.write(Tweets["Cleaned"].head(2))
-            Embeddings=c.Emdedding(Tweets["Cleaned"])
-            st.write(len(Embeddings), "record Embedded")
-            st.write(Embeddings[0])
+            embeddings=c.Emdedding(Tweets["Cleaned"])
+            st.write(len(embeddings), "record Embedded")
+            st.write(embeddings[0])
         except Exception as e:
             st.error(e)
     else:
@@ -31,10 +31,10 @@ with col1:
 
 with col2:
     st.write("**Bert + CNN Model**")
-    if(len(Embeddings)>0):
+    if(len(embeddings)>0):
         test_size = st.number_input("Test Size", min_value=0.1, max_value=0.5, step=0.1)
         if st.button("Split Data"):
-            train_loader,test_loader,labels_n = c.TrainPreparing(Embeddings,Tweets[labels],test_size)
+            train_loader,test_loader,labels_n = c.TrainPreparing(embeddings,Tweets[labels],test_size)
             st.write("Data Splitted")
             model,criterion,optimizer = c.BuildModel(768,labels_n)
             st.write("Model Built")
