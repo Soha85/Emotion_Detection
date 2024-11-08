@@ -43,10 +43,11 @@ with col1:
 
 with col2:
     st.write("**Bert + CNN Model**")
-    c = Classify()
+
     if st.button("Split Data"):
          test_size = st.number_input("Test Size", min_value=0.1, max_value=0.5, step=0.1)
          if not st.session_state.embeddings.empty:
+             c = Classify()
              train_loader,test_loader,labels_n = c.TrainPreparing(embeddings,Tweets[labels],test_size)
              st.write("Data Splitted")
     #         model,criterion,optimizer = c.BuildModel(768,labels_n)
