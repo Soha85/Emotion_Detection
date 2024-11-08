@@ -8,7 +8,7 @@ col1, col2 = st.columns(2)
 Tweets,labels=[],[]
 c = Classify()
 with col1:
-    st.write("**Loading + Preprocessing Model**")
+    st.write("**Loading + Preprocessing Data**")
     if st.button('Load Data'):
         st.write("Data Loaded")
 
@@ -31,12 +31,12 @@ with col1:
 with col2:
     st.write("**Bert + CNN Model**")
     test_size = st.number_input("Test Size", min_value=0.1, max_value=0.5, step=0.1)
-    if st.button("Split Data"):
-        train_loader,test_loader,labels_n = c.TrainPreparing(Tweets["embedding"].tolist(),labels,test_size)
-        st.write("Data Splitted")
-        model,criterion,optimizer = c.BuildModel(768,labels_n)
-        st.write("Model Built")
-        num_epochs = st.number_input("Epochs", min_value=10, max_value=50, step=5)
-        model = c.TrainModel(model,criterion,optimizer,num_epochs, train_loader)
-        st.write("Model Trained")
-        st.write("Result of Testing Model:", c.TestModel(model,test_loader))
+    # if st.button("Split Data"):
+    #     train_loader,test_loader,labels_n = c.TrainPreparing(Tweets["embedding"].tolist(),labels,test_size)
+    #     st.write("Data Splitted")
+    #     model,criterion,optimizer = c.BuildModel(768,labels_n)
+    #     st.write("Model Built")
+    #     num_epochs = st.number_input("Epochs", min_value=10, max_value=50, step=5)
+    #     model = c.TrainModel(model,criterion,optimizer,num_epochs, train_loader)
+    #     st.write("Model Trained")
+    #     st.write("Result of Testing Model:", c.TestModel(model,test_loader))

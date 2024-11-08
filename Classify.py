@@ -18,17 +18,21 @@ model = BertModel.from_pretrained('bert-base-uncased')
 class Classify:
     def __init__(self):
         return
+
     def loadData(self):
         Tweets = pd.read_csv('2018-E-c-En-train.csv')
         labels = list(Tweets.columns[2:])
         return Tweets,labels
+
     def PreprocessData(self,Tweet):
-        Tweet =  re.sub(r"http:\S+", '', Tweet)
+        Tweet =  re.sub(r"http:\S+", '', Tweet.lower())
         Tweet = emoji.demojize(Tweet)
         Tweet = Tweet.translate(str.maketrans('', '',string.punctuation))
         return Tweet
+
     def SplitHashTags(self,Tweet):
         return re.findall(r"#(\w+)",Tweet)
+
     def Emdedding(self,Tweet):
         inputs = tokenizer(Tweet, padding=True, truncation=True, return_tensors="pt")
         with torch.no_grad():
@@ -36,6 +40,7 @@ class Classify:
         hidden_states = outputs.last_hidden_state
         embeddings = hidden_states.mean(dim=1)
         return embeddings.tolist()
+
     def TrainPreparing(self,embeddings, labels,test_size=0.2):
         mlb = MultiLabelBinarizer()
         labels = mlb.fit_transform(labels)
@@ -58,6 +63,7 @@ class Classify:
         criterion = nn.BCELoss()  #Binary Cross Entropy
         optimizer = optim.Adam(model.parameters(), lr=0.001)
         return model,criterion,optimizer
+
     def TrainModel(self,model,criterion,optimizer,num_epochs,train_loader):
         for epoch in range(num_epochs):
             model.train()
@@ -71,6 +77,7 @@ class Classify:
                 running_loss += loss.item()
             streamlit.write(f"Epoch {epoch + 1}, Loss: {running_loss / len(train_loader)}")
         return model
+
     def TestModel(self,model,test_loader):
         # Testing loop
         model.eval()
