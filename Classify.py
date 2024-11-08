@@ -33,8 +33,8 @@ class Classify:
     def SplitHashTags(self,Tweet):
         return re.findall(r"#(\w+)",Tweet)
 
-    def Emdedding(self,Tweet):
-        inputs = tokenizer(Tweet, padding=True, truncation=True, return_tensors="pt")
+    def Emdedding(self,Tweets):
+        inputs = tokenizer(Tweets, padding=True, truncation=True, return_tensors="pt")
         with torch.no_grad():
             outputs = model(**inputs)
         hidden_states = outputs.last_hidden_state
