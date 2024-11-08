@@ -1,6 +1,4 @@
 import streamlit as st
-import logging
-import requests
 st.set_page_config(layout="wide")
 # Streamlit UI
 st.title("Emotion Detection")
