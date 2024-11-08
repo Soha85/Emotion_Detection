@@ -39,7 +39,7 @@ class Classify:
             outputs = model(**inputs)
         hidden_states = outputs.last_hidden_state
         embeddings = hidden_states.mean(dim=1)
-        return embeddings.tolist()
+        return embeddings
 
     def TrainPreparing(self,embeddings, labels,test_size=0.2):
         mlb = MultiLabelBinarizer()

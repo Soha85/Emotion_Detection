@@ -30,10 +30,12 @@ with col1:
             st.session_state.tweets = Tweets
             st.write(len(Tweets), "record Cleaned from URLs, Emojis, and Punctuation")
             st.write(Tweets["Cleaned"].head(2))
-            embeddings=c.Emdedding(Tweets["Cleaned"].tolist())
-            st.write(len(embeddings), "record Embedded")
-            st.session_state.embeddings = embeddings
-            st.write(embeddings[0])
+            st.write(Tweets["Cleaned"].tolist())
+            #embeddings=c.Emdedding(Tweets["Cleaned"].tolist())
+            #st.write(len(embeddings), "record Embedded")
+            #st.session_state.embeddings = embeddings
+            #st.write(embeddings[0])
+
         except Exception as e:
             st.error(e)
     else:
