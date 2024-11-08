@@ -30,7 +30,7 @@ with col1:
             st.session_state.tweets = Tweets
             st.write(len(Tweets), "record Cleaned from URLs, Emojis, and Punctuation")
             st.write(Tweets["Cleaned"].head(2))
-            embeddings=c.Emdedding(Tweets["Cleaned"].tolist())
+            embeddings=c.Bert_Emdedding(Tweets["Cleaned"])
             #st.write(len(embeddings), "record Embedded")
             #st.session_state.embeddings = embeddings
             #st.write(embeddings[0])
