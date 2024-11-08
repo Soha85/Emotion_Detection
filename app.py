@@ -10,9 +10,14 @@ with col1:
     if st.button('Load Data'):
         st.write("Data Loaded")
         c = Classify()
-        Tweets,labels = c.loadData()
-        st.write(len(Tweets),"record loaded")
-        st.write(len(labels),"labels are:",','.join(labels))
+        try:
+            Tweets,labels = c.loadData()
+            st.write(len(Tweets),"record loaded")
+            st.write(len(labels),"labels are:",','.join(labels))
+            Tweets["embedding"]=Tweets.apply(lambda x: c.Emdedding(x))
+            st.write(len(Tweets), "record Embedded")
+        except Exception as e:
+            st.write(e)
     else:
         st.write("No Data Loaded")
 

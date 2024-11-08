@@ -1,11 +1,23 @@
 import pandas as pd
+import torch
+from transformers import BertTokenizer, BertModel
+
+# Load pre-trained BERT tokenizer and model
+tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
+model = BertModel.from_pretrained('bert-base-uncased')
 class Classify:
     def __init__(self):
         return
     def loadData(self):
-        try:
-            Tweets = pd.read_csv('2018-E-c-En-train.csv')
-            labels = list(Tweets.columns[2:])
-            return Tweets,labels
-        except Exception as e:
-            return e
+        Tweets = pd.read_csv('2018-E-c-En-train.csv')
+        labels = list(Tweets.columns[2:])
+        return Tweets,labels
+    def PreprocessData(self,Tweet):
+        return re.sub(r"http:\S+", '', Tweet)
+    def Emdedding(self,Tweet):
+        inputs = tokenizer(Tweet, padding=True, truncation=True, return_tensors="pt")
+        with torch.no_grad():
+            outputs = model(**inputs)
+        hidden_states = outputs.last_hidden_state
+        embeddings = hidden_states.mean(dim=1)
+        return embeddings
