@@ -20,7 +20,6 @@ with col1:
         st.write("Data Loaded")
 
         try:
-            c = Classify()
             Tweets,labels = c.loadData()
             st.session_state.tweets=Tweets
             st.session_state.labels=labels
@@ -33,7 +32,7 @@ with col1:
             st.write(Tweets["Cleaned"].head(2))
             embeddings=c.Bert_Emdedding(Tweets["Cleaned"].astype(str).tolist())
             #st.write(len(embeddings), "record Embedded")
-            #st.session_state.embeddings = embeddings
+            st.session_state.embeddings = embeddings
             #st.write(embeddings[0])
 
         except Exception as e:
@@ -44,11 +43,11 @@ with col1:
 with col2:
     st.write("**Bert + CNN Model**")
 
-    if st.button("Split Data"):
+    if st.button("Split Data") and st.session_state.embeddings is not None:
          test_size = st.number_input("Test Size", min_value=0.1, max_value=0.5, step=0.1)
-         if not st.session_state.embeddings.empty:
+         if len(st.session_state.embeddings) > 0:
 
-             train_loader,test_loader,labels_n = c.TrainPreparing(embeddings,Tweets[labels],test_size)
+             train_loader,test_loader,labels_n = c.TrainPreparing(st.session_state.embeddings, st.session_state.tweets[st.session_state.labels],test_size)
              st.write("Data Splitted")
     #         model,criterion,optimizer = c.BuildModel(768,labels_n)
     #         st.write("Model Built")
