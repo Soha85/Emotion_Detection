@@ -34,6 +34,7 @@ class Classify:
         return re.findall(r"#(\w+)",Tweet)
 
     def Bert_Emdedding(self,Tweets):
+        print(Tweets)
         inputs = tokenizer(Tweets, padding=True, truncation=True, return_tensors="pt")
         with torch.no_grad():
             outputs = model(**inputs)
