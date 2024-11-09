@@ -56,10 +56,6 @@ sphinxcontrib-jsmath==1.0.1
 sphinxcontrib-qthelp==1.0.3
 sphinxcontrib-serializinghtml==1.1.5
 streamlit==1.39.0
-sympy==1.13.1
-tenacity==9.0.0
-threadpoolctl==3.5.0
-tokenizers==0.20.1
 toml==0.10.2
 tqdm==4.66.5
 emoji
