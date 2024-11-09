@@ -32,21 +32,22 @@ with col1:
             Tweets, labels = c.loadData()
             st.session_state.tweets = Tweets
             st.session_state.labels = labels
-            st.write(len(Tweets), "records loaded")
-            st.write(len(labels), "labels are:", ', '.join(map(str, labels)))
-            st.write(Tweets.head(2))
+            st.write(len(st.session_state.tweets), "records loaded")
+            st.write(len(st.session_state.labels), "labels are:", ', '.join(map(str, labels)))
+            st.write(st.session_state.tweets.head(2))
 
             # Preprocess data
             Tweets["Cleaned"] = Tweets["Tweet"].apply(lambda x: c.PreprocessData(x))
             st.session_state.tweets = Tweets
-            st.write(len(Tweets), "records cleaned from URLs, emojis, and punctuation")
-            st.write(Tweets["Cleaned"].head(2))
+            st.write(len(st.session_state.tweets), "records cleaned from URLs, emojis, and punctuation")
+            st.write(st.session_state.tweets.head(2))
 
             # Generate embeddings and save in session state
             embeddings = c.Bert_Emdedding(Tweets["Cleaned"].loc[0:1000].astype(str).tolist())
-            st.write("embeddings......",embeddings.shape)
-
             st.session_state.embeddings = embeddings  # Save embeddings in session state
+            st.write("Embedding Size......",st.session_state.tweets.embeddings)
+
+
             st.write("Embedding Done...")
 
 
@@ -68,7 +69,7 @@ with col2:
                     # Ensure labels is accessible and used correctly
                     if isinstance(st.session_state.labels, list):
                         train_loader, test_loader, labels_n = c.TrainPreparing(
-                            st.session_state.embeddings, st.session_state.tweets[st.session_state.labels], test_size
+                            st.session_state.embeddings, st.session_state.tweets[st.session_state.labels].loc[0:1000], test_size
                         )
                         st.write("Data split completed")
                     else:

@@ -33,7 +33,7 @@ class Classify:
         return re.findall(r"#(\w+)",Tweet)
 
     def Bert_Emdedding(self,Tweets):
-        print(Tweets)
+
         tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
         bert_model = BertModel.from_pretrained('bert-base-uncased')
         inputs = tokenizer(Tweets, padding=True, truncation=True, return_tensors="pt")
