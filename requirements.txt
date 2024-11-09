@@ -61,7 +61,7 @@ tenacity==9.0.0
 threadpoolctl==3.5.0
 tokenizers==0.20.1
 toml==0.10.2
-torch==2.5.0
 tqdm==4.66.5
-transformers==4.45.2
 emoji
+torch==2.0.0
+transformers==4.30.0
