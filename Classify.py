@@ -13,8 +13,7 @@ import torch.optim as optim
 import torch.nn as nn
 
 # Load pre-trained BERT tokenizer and model
-tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
-bert_model = BertModel.from_pretrained('bert-base-uncased')
+
 class Classify:
     def __init__(self):
         return
@@ -35,6 +34,8 @@ class Classify:
 
     def Bert_Emdedding(self,Tweets):
         print(Tweets)
+        tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
+        bert_model = BertModel.from_pretrained('bert-base-uncased')
         inputs = tokenizer(Tweets, padding=True, truncation=True, return_tensors="pt")
         with torch.no_grad():
             outputs = bert_model(**inputs)
