@@ -53,8 +53,8 @@ class Classify:
         X_train, X_test, y_train, y_test = train_test_split(embeddings, labels, test_size=test_size, random_state=42)
 
         # Convert data to PyTorch tensors
-        X_train, X_test = torch.tensor(X_train.to_numpy(), dtype=torch.float32), torch.tensor(X_test.to_numpy(), dtype=torch.float32)
-        y_train, y_test = torch.tensor(y_train.to_numpy(), dtype=torch.float32), torch.tensor(y_test.to_numpy(), dtype=torch.float32)
+        X_train, X_test = torch.tensor(X_train, dtype=torch.float32), torch.tensor(X_test, dtype=torch.float32)
+        y_train, y_test = torch.tensor(y_train, dtype=torch.float32), torch.tensor(y_test, dtype=torch.float32)
 
         # Prepare data loaders
         train_data = TensorDataset(X_train, y_train)
