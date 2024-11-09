@@ -25,7 +25,7 @@ c = Classify()
 with col1:
     st.write("**Loading + Preprocessing Data**")
     try:
-        if st.button('Load Data') :
+        if st.button('Load Data'):
 
 
             # Load data
@@ -35,8 +35,8 @@ with col1:
             st.session_state.tweets = Tweets
             st.session_state.labels = labels
             st.write(len(st.session_state.tweets), "records loaded")
-            st.write(len(st.session_state.labels), "labels are:", ', '.join(map(str, labels)))
-            st.write(st.session_state.tweets.head(2))
+            st.write(len(st.session_state.labels), "labels are:", ', '.join(map(str, st.session_state.labels)))
+            st.write(st.session_state.tweets["Tweet"].head(2))
 
             # Preprocess data
             Tweets["Cleaned"] = Tweets["Tweet"].apply(lambda x: c.PreprocessData(x))
@@ -47,12 +47,19 @@ with col1:
             # Generate embeddings and save in session state
             embeddings = c.Bert_Emdedding(Tweets["Cleaned"].astype(str).tolist())
             st.session_state.embeddings = embeddings  # Save embeddings in session state
-            st.write("Embedding Size......",st.session_state.embeddings.shape)
-
+            st.write("Embedding Size......", st.session_state.embeddings.shape)
 
             st.write("Embedding Done...")
 
 
+        elif "tweets" in st.session_state:
+            st.write(len(st.session_state.tweets), "records loaded")
+            st.write(len(st.session_state.labels), "labels are:", ', '.join(map(str, st.session_state.labels)))
+            st.write(st.session_state.tweets["Tweet"].head(2))
+            st.write(len(st.session_state.tweets), "records cleaned from URLs, emojis, and punctuation")
+            st.write(st.session_state.tweets["Cleaned"].head(2))
+            st.write("Embedding Size......", st.session_state.embeddings.shape)
+            st.write("Embedding Done...")
         else:
             st.write("No Data Loaded")
 

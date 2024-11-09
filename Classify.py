@@ -50,10 +50,10 @@ class Classify:
         #labels = mlb.fit_transform(labels)
         streamlit.write(labels.shape)
         # Split into train and test sets
-        X_train, X_test, y_train, y_test = train_test_split(embeddings, labels, test_size=test_size, random_state=42)
+        X_train, X_test, y_train, y_test = train_test_split(embeddings, labels.values(), test_size=test_size, random_state=42)
 
         # Convert data to PyTorch tensors
-        X_train, X_test = torch.tensor(X_train), torch.tensor(X_test)
+        X_train, X_test = torch.tensor(X_train, dtype=torch.float32), torch.tensor(X_test, dtype=torch.float32)
         y_train, y_test = torch.tensor(y_train, dtype=torch.float32), torch.tensor(y_test, dtype=torch.float32)
 
         # Prepare data loaders
