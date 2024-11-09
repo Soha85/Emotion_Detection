@@ -30,6 +30,7 @@ with col1:
 
             # Load data
             Tweets, labels = c.loadData()
+            Tweets=Tweets.loc[0:1000]
             st.session_state.tweets = Tweets
             st.session_state.labels = labels
             st.write(len(st.session_state.tweets), "records loaded")
@@ -43,7 +44,7 @@ with col1:
             st.write(st.session_state.tweets["Cleaned"].head(2))
 
             # Generate embeddings and save in session state
-            embeddings = c.Bert_Emdedding(Tweets["Cleaned"].loc[0:1000].astype(str).tolist())
+            embeddings = c.Bert_Emdedding(Tweets["Cleaned"].astype(str).tolist())
             st.session_state.embeddings = embeddings  # Save embeddings in session state
             st.write("Embedding Size......",st.session_state.embeddings.shape)
 
@@ -69,7 +70,7 @@ with col2:
                     # Ensure labels is accessible and used correctly
                     if isinstance(st.session_state.labels, list):
                         train_loader, test_loader, labels_n = c.TrainPreparing(
-                            st.session_state.embeddings, st.session_state.tweets[st.session_state.labels].loc[0:1000], test_size
+                            st.session_state.embeddings, st.session_state.tweets[st.session_state.labels], test_size
                         )
                         st.write("Data split completed")
                     else:
