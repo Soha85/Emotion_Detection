@@ -73,6 +73,8 @@ with col2:
         # Ensure embeddings and tweets are loaded before allowing split
         test_size = st.number_input("Test Size", min_value=0.1, max_value=0.5, step=0.1)
         if st.button("Split Data") and st.session_state.embeddings is not None:
+            st.write(type(st.session_state.embeddings))
+            st.write(type(st.session_state.tweets[st.session_state.labels]))
             # Ensure embeddings are non-empty and tweets are loaded correctly
             if len(st.session_state.embeddings) > 0:
                 try:
