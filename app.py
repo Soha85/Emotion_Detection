@@ -40,12 +40,12 @@ with col1:
             Tweets["Cleaned"] = Tweets["Tweet"].apply(lambda x: c.PreprocessData(x))
             st.session_state.tweets = Tweets
             st.write(len(st.session_state.tweets), "records cleaned from URLs, emojis, and punctuation")
-            st.write(st.session_state.tweets.head(2))
+            st.write(st.session_state.tweets["Cleaned"].head(2))
 
             # Generate embeddings and save in session state
             embeddings = c.Bert_Emdedding(Tweets["Cleaned"].loc[0:1000].astype(str).tolist())
             st.session_state.embeddings = embeddings  # Save embeddings in session state
-            st.write("Embedding Size......",st.session_state.tweets.embeddings)
+            st.write("Embedding Size......",st.session_state.embeddings.shape)
 
 
             st.write("Embedding Done...")
