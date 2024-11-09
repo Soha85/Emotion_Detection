@@ -94,12 +94,3 @@ with col2:
         st.write("Stack Trace:", e)
         st.error(f"Error Build, Training & Testing Model: {e}")
 
-if not st.session_state.tweets is not None:
-    st.write("Data Loaded")
-    st.write(len(st.session_state.tweets), "records loaded")
-    st.write(len(st.session_state.labels), "labels are:", ', '.join(map(str, st.session_state.labels)))
-    st.write(st.session_state.tweets["Tweet"].head(2))
-    st.write(len(st.session_state.tweets), "records cleaned from URLs, emojis, and punctuation")
-    st.write(st.session_state.tweets["Cleaned"].head(2))
-    st.write("Embedding Size......", st.session_state.embeddings.shape)
-    st.write("Embedding Done...")
