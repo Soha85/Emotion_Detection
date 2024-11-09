@@ -25,12 +25,13 @@ c = Classify()
 with col1:
     st.write("**Loading + Preprocessing Data**")
     try:
-        if st.button('Load Data'):
-            st.write("Data Loaded")
+        if st.button('Load Data') :
+
 
             # Load data
             Tweets, labels = c.loadData()
             Tweets=Tweets.loc[0:1000]
+            st.write("Data Loaded")
             st.session_state.tweets = Tweets
             st.session_state.labels = labels
             st.write(len(st.session_state.tweets), "records loaded")

@@ -46,8 +46,8 @@ class Classify:
     def TrainPreparing(self,embeddings, labels,test_size=0.2):
         streamlit.write(embeddings.shape)
         streamlit.write(labels.shape)
-        mlb = MultiLabelBinarizer()
-        labels = mlb.fit_transform(labels)
+        #mlb = MultiLabelBinarizer()
+        #labels = mlb.fit_transform(labels)
         streamlit.write(labels.shape)
         # Split into train and test sets
         X_train, X_test, y_train, y_test = train_test_split(embeddings, labels, test_size=test_size, random_state=42)
@@ -61,7 +61,7 @@ class Classify:
         test_data = TensorDataset(X_test, y_test)
         train_loader = DataLoader(train_data, batch_size=2, shuffle=True)
         test_loader = DataLoader(test_data, batch_size=2)
-        return train_loader,test_loader,len(mlb.classes_)
+        return train_loader,test_loader,len(labels)
 
     def BuildModel(self,embed_dim,num_classes):
         model = TweetCNN(embed_dim=embed_dim, num_classes=num_classes)
