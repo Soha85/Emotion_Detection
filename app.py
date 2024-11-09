@@ -43,10 +43,11 @@ with col1:
             st.write(Tweets["Cleaned"].head(2))
 
             # Generate embeddings and save in session state
-            embeddings = c.Bert_Emdedding(Tweets["Cleaned"].loc[0:5].astype(str).tolist())
+            embeddings = c.Bert_Emdedding(Tweets["Cleaned"].loc[0:1000].astype(str).tolist())
             st.write("embeddings......",embeddings.shape)
 
             st.session_state.embeddings = embeddings  # Save embeddings in session state
+            st.write("Embedding Done...")
 
 
         else:
@@ -59,9 +60,8 @@ with col2:
     st.write("**Bert + CNN Model**")
     try:
         # Ensure embeddings and tweets are loaded before allowing split
+        test_size = st.number_input("Test Size", min_value=0.1, max_value=0.5, step=0.1)
         if st.button("Split Data") and st.session_state.embeddings is not None:
-            test_size = st.number_input("Test Size", min_value=0.1, max_value=0.5, step=0.1)
-
             # Ensure embeddings are non-empty and tweets are loaded correctly
             if len(st.session_state.embeddings) > 0:
                 try:
