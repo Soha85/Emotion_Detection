@@ -26,8 +26,6 @@ with col1:
     st.write("**Loading + Preprocessing Data**")
     try:
         if st.button('Load Data'):
-
-
             # Load data
             Tweets, labels = c.loadData()
             Tweets=Tweets.loc[0:1000]
@@ -52,7 +50,7 @@ with col1:
             st.write("Embedding Done...")
 
 
-        elif "tweets" in st.session_state:
+        elif st.session_state.tweets is not None:
             st.write("Data Loaded")
             st.write(len(st.session_state.tweets), "records loaded")
             st.write(len(st.session_state.labels), "labels are:", ', '.join(map(str, st.session_state.labels)))
