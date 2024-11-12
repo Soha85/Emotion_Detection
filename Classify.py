@@ -44,11 +44,7 @@ class Classify:
         return embeddings
 
     def TrainPreparing(self,embeddings, labels,test_size=0.2):
-        streamlit.write(embeddings.shape)
-        streamlit.write(labels.shape)
-        #mlb = MultiLabelBinarizer()
-        #labels = mlb.fit_transform(labels)
-        streamlit.write(labels.shape)
+
         # Split into train and test sets
         X_train, X_test, y_train, y_test = train_test_split(embeddings, labels, test_size=test_size, random_state=42)
 
