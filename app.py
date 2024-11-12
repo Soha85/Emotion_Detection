@@ -79,7 +79,7 @@ with col2:
                     # Ensure labels is accessible and used correctly
                     if isinstance(st.session_state.labels, list):
                         train_loader, test_loader, labels_n = c.TrainPreparing(
-                            st.session_state.embeddings.values.tolist(), st.session_state.tweets[st.session_state.labels].values.tolist(), test_size
+                            st.session_state.embeddings.values, st.session_state.tweets[st.session_state.labels].values.tolist(), test_size
                         )
                         st.write("Data split completed")
                     else:
