@@ -68,9 +68,9 @@ with col1:
 with col2:
     st.write("**Bert + CNN Model**")
     test_size = st.number_input("Test Size", min_value=0.1, max_value=0.5, step=0.1)
-    train_loader, test_loader, labels_n = c.TrainPreparing(
-    st.session_state.embeddings.values, st.session_state.tweets[st.session_state.labels].values, test_size
-    )
+    if st.button("Split Data") and st.session_state.embeddings is not None:
+        train_loader, test_loader, labels_n = c.TrainPreparing(
+            st.session_state.embeddings.values, st.session_state.tweets[st.session_state.labels].values, test_size)
     # try:
     #     # Ensure embeddings and tweets are loaded before allowing split
     #     test_size = st.number_input("Test Size", min_value=0.1, max_value=0.5, step=0.1)
