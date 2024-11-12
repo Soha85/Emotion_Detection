@@ -40,8 +40,8 @@ class Classify:
         with torch.no_grad():
             outputs = bert_model(**inputs)
         hidden_states = outputs.last_hidden_state
-        embeddings = hidden_states.mean(dim=1)
-        return embeddings
+
+        return hidden_states.mean(dim=1)
 
     def TrainPreparing(self,tweets_embeddings, labels,test_size=0.2):
 
