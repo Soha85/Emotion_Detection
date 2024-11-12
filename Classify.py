@@ -63,7 +63,7 @@ class Classify:
 
     def BuildModel(self,embed_dim,num_classes):
         model = TweetCNN(embed_dim=embed_dim, num_classes=num_classes)
-        criterion = nn.BCELoss()  #Binary Cross Entropy
+        criterion = nn.BCEWithLogitsLoss()
         optimizer = optim.Adam(model.parameters(), lr=0.001)
         return model,criterion,optimizer
 
