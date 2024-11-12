@@ -69,7 +69,7 @@ with col1:
 with col2:
     st.write("**Bert + CNN Model**")
     test_size = st.number_input("Test Size", min_value=0.1, max_value=0.5, step=0.1)
-    num_epochs = st.number_input("Epochs Size", min_value=1, max_value=30, step=1)
+    num_epochs = st.number_input("Epochs Size", min_value=2, max_value=30, step=2)
     if st.button("Split Data") and st.session_state.tweets_embeddings is not None:
         train_loader, test_loader, labels_n = c.TrainPreparing(
             st.session_state.tweets_embeddings, st.session_state.tweets[st.session_state.labels].values, test_size)
