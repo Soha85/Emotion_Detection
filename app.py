@@ -58,7 +58,7 @@ with col1:
              st.write(st.session_state.tweets["Tweet"].head(2))
              st.write(len(st.session_state.tweets), "records cleaned from URLs, emojis, and punctuation")
              st.write(st.session_state.tweets["Cleaned"].head(2))
-             st.write("Embedding Size......", st.session_state.embeddings.shape)
+             st.write("Embedding Size......", st.session_state.tweets_embeddings.shape)
              st.write("Embedding Done...")
         else:
             st.write("No Data Loaded")
