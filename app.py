@@ -43,7 +43,7 @@ with col1:
             st.write(st.session_state.tweets["Cleaned"].head(2))
 
             # Generate embeddings and save in session state
-            tweets_embeddings = c.Bert_Emdedding(Tweets["Cleaned"].astype(str).tolist())
+            tweets_embeddings = c.Bert_Emdedding(Tweets["Cleaned"].astype(str).tolist()).cpu().numpy()
             st.session_state.tweets_embeddings = tweets_embeddings  # Save embeddings in session state
             st.write("Embedding Size......", st.session_state.tweets_embeddings.shape)
             print(type(tweets_embeddings))
