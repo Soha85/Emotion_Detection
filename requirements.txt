@@ -4,3 +4,4 @@ torch~=2.5.0
 emoji~=2.14.0
 transformers~=4.45.2
 scikit-learn~=1.5.2
+matplotlib

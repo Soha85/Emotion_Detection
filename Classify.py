@@ -67,6 +67,8 @@ class Classify:
         return model,criterion,optimizer
 
     def TrainModel(self,model,criterion,optimizer,num_epochs,train_loader):
+        train_losses = []
+        val_losses = []
         for epoch in range(num_epochs):
             model.train()
             running_loss = 0.0
