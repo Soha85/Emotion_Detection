@@ -43,9 +43,10 @@ with col1:
             st.write(st.session_state.tweets["Cleaned"].head(2))
 
             # Generate embeddings and save in session state
-            embeddings = c.Bert_Emdedding(Tweets["Cleaned"].astype(str).tolist())
-            st.session_state.embeddings = embeddings  # Save embeddings in session state
-            st.write("Embedding Size......", st.session_state.embeddings.shape)
+            tweets_embeddings = c.Bert_Emdedding(Tweets["Cleaned"].astype(str).tolist())
+            st.session_state.tweets_embeddings = tweets_embeddings  # Save embeddings in session state
+            st.write("Embedding Size......", st.session_state.tweets_embeddings.shape)
+            print(type(tweets_embeddings))
 
             st.write("Embedding Done...")
 
@@ -68,10 +69,10 @@ with col1:
 with col2:
     st.write("**Bert + CNN Model**")
     test_size = st.number_input("Test Size", min_value=0.1, max_value=0.5, step=0.1)
-    if st.button("Split Data") and st.session_state.embeddings is not None:
-        print(type(st.session_state.embeddings.values))
+    if st.button("Split Data") and st.session_state.tweets_embeddings is not None:
+        print(type(st.session_state.tweets_embeddings.values))
         train_loader, test_loader, labels_n = c.TrainPreparing(
-            st.session_state.embeddings.values, st.session_state.tweets[st.session_state.labels].values, test_size)
+            st.session_state.tweets_embeddings, st.session_state.tweets[st.session_state.labels].values, test_size)
     # try:
     #     # Ensure embeddings and tweets are loaded before allowing split
     #     test_size = st.number_input("Test Size", min_value=0.1, max_value=0.5, step=0.1)
