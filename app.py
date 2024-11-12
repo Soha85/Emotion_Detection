@@ -28,7 +28,7 @@ with col1:
         if st.button('Load Data'):
             # Load data
             Tweets, labels = c.loadData()
-            Tweets=Tweets.loc[0:1000]
+            Tweets=Tweets.loc[0:3000]
             st.write("Data Loaded")
             st.session_state.tweets = Tweets
             st.session_state.labels = labels
@@ -74,12 +74,11 @@ with col2:
         train_loader, test_loader, labels_n = c.TrainPreparing(
             st.session_state.tweets_embeddings, st.session_state.tweets[st.session_state.labels].values, test_size)
         st.write("Data split completed")
-        st.write(len(st.session_state.labels))
         model,criterion,optimizer = c.BuildModel(st.session_state.tweets_embeddings.shape[1],len(st.session_state.labels))
         st.write("Model Built")
         model = c.TrainModel(model,criterion,optimizer,num_epochs,train_loader)
         st.write("Model Trained")
-        c.TestModel(model,test_loader)
+        st.write(c.TestModel(model,test_loader))
     # try:
     #     # Ensure embeddings and tweets are loaded before allowing split
     #     test_size = st.number_input("Test Size", min_value=0.1, max_value=0.5, step=0.1)

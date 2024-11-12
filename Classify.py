@@ -46,8 +46,7 @@ class Classify:
     def TrainPreparing(self,tweets_embeddings, labels,test_size=0.2):
 
         # Split into train and test sets
-        print(type(tweets_embeddings))
-        print(type(labels))
+
         X_train, X_test, y_train, y_test = train_test_split(tweets_embeddings, labels, test_size=test_size, random_state=42)
 
         # Convert data to PyTorch tensors
