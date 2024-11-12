@@ -46,7 +46,7 @@ class Classify:
     def TrainPreparing(self,embeddings, labels,test_size=0.2):
 
         # Split into train and test sets
-        X_train, X_test, y_train, y_test = train_test_split(embeddings, labels, test_size=test_size, random_state=42)
+        X_train, X_test, y_train, y_test = train_test_split(embeddings.cpu().numpy(), labels, test_size=test_size, random_state=42)
 
         # Convert data to PyTorch tensors
         X_train, X_test = torch.tensor(X_train, dtype=torch.float32), torch.tensor(X_test, dtype=torch.float32)
