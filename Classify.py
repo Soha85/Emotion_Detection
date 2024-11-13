@@ -43,22 +43,31 @@ class Classify:
 
         return hidden_states.mean(dim=1)
 
-    def TrainPreparing(self,tweets_embeddings, labels,test_size=0.2):
+    def TrainPreparing(self,tweets_embeddings, labels, batch_size,test_size=0.2):
 
         # Split into train and test sets
 
-        X_train, X_test, y_train, y_test = train_test_split(tweets_embeddings, labels, test_size=test_size, random_state=42)
+        #X_train, X_test, y_train, y_test = train_test_split(tweets_embeddings, labels, test_size=test_size, random_state=42)
+        # First split: Split data into training and temporary sets
+        X_train, X_temp, y_train, y_temp = train_test_split(tweets_embeddings, labels,
+                                                            test_size=(test_size * 2), random_state=42)
+
+
+        # Second split: Split the temporary set into validation and test sets
+        X_val, X_test, y_val, y_test = train_test_split(X_temp, y_temp, test_size=test_size, random_state=42)
 
         # Convert data to PyTorch tensors
-        X_train, X_test = torch.tensor(X_train, dtype=torch.float32), torch.tensor(X_test, dtype=torch.float32)
-        y_train, y_test = torch.tensor(y_train, dtype=torch.float32), torch.tensor(y_test, dtype=torch.float32)
+        X_train, X_test,X_val = torch.tensor(X_train, dtype=torch.float32), torch.tensor(X_test, dtype=torch.float32), torch.tensor(X_val, dtype=torch.float32)
+        y_train, y_test, y_val = torch.tensor(y_train, dtype=torch.float32), torch.tensor(y_test, dtype=torch.float32),  torch.tensor(y_val, dtype=torch.float32)
 
         # Prepare data loaders
         train_data = TensorDataset(X_train, y_train)
         test_data = TensorDataset(X_test, y_test)
-        train_loader = DataLoader(train_data, batch_size=2, shuffle=True)
-        test_loader = DataLoader(test_data, batch_size=2)
-        return train_loader,test_loader,len(labels)
+        val_data = TensorDataset(X_val, y_val)
+        train_loader = DataLoader(train_data, batch_size=10, shuffle=True)
+        test_loader = DataLoader(test_data, batch_size=10)
+        val_loader = DataLoader(val_data, batch_size=10)
+        return train_loader,test_loader,val_loader,len(labels)
 
     def BuildModel(self,embed_dim,num_classes):
         model = TweetCNN(embed_dim=embed_dim, num_classes=num_classes)
@@ -66,7 +75,7 @@ class Classify:
         optimizer = optim.Adam(model.parameters(), lr=0.001)
         return model,criterion,optimizer
 
-    def TrainModel(self,model,criterion,optimizer,num_epochs,train_loader):
+    def TrainModel(self,model,criterion,optimizer,num_epochs,train_loader,val_loader):
         train_losses = []
         val_losses = []
         for epoch in range(num_epochs):
@@ -80,6 +89,25 @@ class Classify:
                 optimizer.step()
                 running_loss += loss.item()
             streamlit.write(f"Epoch {epoch + 1}, Loss: {running_loss / len(train_loader)}")
+
+            # Record average loss over training batches
+            avg_train_loss = running_loss / len(train_loader)
+            train_losses.append(avg_train_loss)
+
+            # Validation phase (optional)
+            model.eval()
+            val_running_loss = 0.0
+            with torch.no_grad():
+                for X_batch, y_batch in val_loader:
+                    outputs = model(X_batch)
+                    loss = criterion(outputs, y_batch)
+                    val_running_loss += loss.item()
+
+            avg_val_loss = val_running_loss / len(val_loader)
+            val_losses.append(avg_val_loss)
+
+            # Print or log progress
+            streamlit.write(f"Epoch {epoch + 1}, Training Loss: {avg_train_loss:.4f}, Validation Loss: {avg_val_loss:.4f}")
         return model
 
     def TestModel(self,model,test_loader):
