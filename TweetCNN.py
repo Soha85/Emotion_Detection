@@ -23,9 +23,9 @@ class TweetCNN(nn.Module):
         x = x.unsqueeze(1)  # Add channel dimension: [batch_size, 1, embed_dim]
 
         x = torch.relu(self.conv1(x))
-        x = self.pool(x)
+        x = self.pool1(x)
         x = torch.relu(self.conv2(x))
-        x = self.pool(x)
+        x = self.pool2(x)
         x = x.view(x.size(0), -1)
         x = self.dropout(x)
         x = self.sigmoid(x)  # Apply sigmoid for multi-label output
