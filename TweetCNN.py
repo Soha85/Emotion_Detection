@@ -18,14 +18,13 @@ class TweetCNN(nn.Module):
 
 
     def forward(self, x):
-        x = x.unsqueeze(1)  # Add channel dimension: [batch_size, 1, embed_dim]
+        x = x.unsqueeze(1)  # Add channel dimension: [batch_size, 1, 128]
 
         x = torch.relu(self.conv1(x))
-        x = self.pool1(x)
+        x = self.pool1(x)  # Sequence length now 64
 
-        x = torch.relu(self.conv2(x))
-        x = self.pool2(x)
+        x = torch.relu(self.conv2(x))  # Sequence length remains 64
 
-        x = x.view(x.size(0), -1)  # Flatten for fully connected layer
+        x = x.view(x.size(0), -1)  # Flatten to [batch_size, 64 * 64]
         x = self.dropout(x)
-        return torch.sigmoid(self.fc(x))  # Sigmoid for multi-label classification
+        return torch.sigmoid(self.fc(x))  # For multi-label classification
