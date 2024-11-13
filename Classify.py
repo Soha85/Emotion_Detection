@@ -10,6 +10,7 @@ from sklearn.preprocessing import MultiLabelBinarizer
 from torch.utils.data import DataLoader, TensorDataset
 from TweetCNN import TweetCNN
 import torch.optim as optim
+import matplotlib.pyplot as plt
 import torch.nn as nn
 
 # Load pre-trained BERT tokenizer and model
@@ -64,15 +65,15 @@ class Classify:
         train_data = TensorDataset(X_train, y_train)
         test_data = TensorDataset(X_test, y_test)
         val_data = TensorDataset(X_val, y_val)
-        train_loader = DataLoader(train_data, batch_size=10, shuffle=True)
-        test_loader = DataLoader(test_data, batch_size=10)
-        val_loader = DataLoader(val_data, batch_size=10)
+        train_loader = DataLoader(train_data, batch_size=batch_size, shuffle=True)
+        test_loader = DataLoader(test_data, batch_size=batch_size)
+        val_loader = DataLoader(val_data, batch_size=batch_size)
         return train_loader,test_loader,val_loader,len(labels)
 
     def BuildModel(self,embed_dim,num_classes):
         model = TweetCNN(embed_dim=embed_dim, num_classes=num_classes)
         criterion = nn.BCEWithLogitsLoss()
-        optimizer = optim.Adam(model.parameters(), lr=0.001)
+        optimizer = optim.Adam(model.parameters(), lr=1e-5)
         return model,criterion,optimizer
 
     def TrainModel(self,model,criterion,optimizer,num_epochs,train_loader,val_loader):
@@ -108,7 +109,7 @@ class Classify:
 
             # Print or log progress
             streamlit.write(f"Epoch {epoch + 1}, Training Loss: {avg_train_loss:.4f}, Validation Loss: {avg_val_loss:.4f}")
-        return model
+        return model,train_losses, val_losses
 
     def TestModel(self,model,test_loader):
         # Testing loop
@@ -124,3 +125,12 @@ class Classify:
         accuracy = correct / total
         return "Test Accuracy:" + str(accuracy)
 
+    def plot_loss_curves(self,train_losses, val_losses):
+        plt.figure(figsize=(10, 5))
+        plt.plot(train_losses, label="Training Loss")
+        plt.plot(val_losses, label="Validation Loss")
+        plt.xlabel("Epochs")
+        plt.ylabel("Loss")
+        plt.title("Training and Validation Loss Over Epochs")
+        plt.legend()
+        streamlit.pyplot(plt)
