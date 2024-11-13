@@ -25,7 +25,7 @@ c = Classify()
 with col1:
     st.write("**Loading + Preprocessing Data**")
     try:
-        num = st.number_input("Epochs Size", min_value=500, max_value=3000, step=500)
+        num = st.number_input("No. of Tweets", min_value=500, max_value=3000, step=500)
         if st.button('Load Data'):
             # Load data
             Tweets, labels = c.loadData()
