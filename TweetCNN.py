@@ -16,7 +16,7 @@ class TweetCNN(nn.Module):
         self.dropout = nn.Dropout(0.5)
 
         # Calculate the flattened dimension after convolutions and pooling
-        flattened_dim = 64 * (embed_dim // 4)
+        flattened_dim = 128 * (embed_dim // 4)
         self.fc = nn.Linear(flattened_dim, num_classes)
 
         # Output layer for multi-label classification
