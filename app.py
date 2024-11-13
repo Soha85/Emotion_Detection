@@ -78,9 +78,10 @@ with col2:
         st.write("Data split completed")
         model,criterion,optimizer = c.BuildModel(st.session_state.tweets_embeddings.shape[1],len(st.session_state.labels))
         st.write("Model Built")
-        model = c.TrainModel(model,criterion,optimizer,num_epochs,train_loader,val_loader)
+        model,train_loss,train_val = c.TrainModel(model,criterion,optimizer,num_epochs,train_loader,val_loader)
         st.write("Model Trained")
         st.write(c.TestModel(model,test_loader))
+        c.plot_loss_curves(train_loss,train_val)
     # try:
     #     # Ensure embeddings and tweets are loaded before allowing split
     #     test_size = st.number_input("Test Size", min_value=0.1, max_value=0.5, step=0.1)
