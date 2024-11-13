@@ -121,7 +121,7 @@ class Classify:
                 optimizer.step()
                 running_loss += loss.item()
 
-            streamlit.write(f"Epoch {epoch + 1}, Loss: {running_loss / len(train_loader)}")
+            #streamlit.write(f"Epoch {epoch + 1}, Loss: {running_loss / len(train_loader)}")
 
             # Record average loss over training batches
             avg_train_loss = running_loss / len(train_loader)
@@ -130,17 +130,21 @@ class Classify:
             # Validation phase (optional)
             model.eval()
             val_running_loss = 0.0
+            correct, total = 0, 0
             with torch.no_grad():
                 for X_v, y_v in val_loader:
                     outputs = model(X_v)
                     loss = criterion(outputs, y_v)
                     val_running_loss += loss.item()
-
+                    predicted = outputs.round()
+                    correct += (predicted == y_v).sum().item()
+                    total += y_v.numel()
+            accuracy = correct / total
             avg_val_loss = val_running_loss / len(val_loader)
             val_losses.append(avg_val_loss)
 
             # Print or log progress
-            streamlit.write(f"Epoch {epoch + 1}, Training Loss: {avg_train_loss:.4f}, Validation Loss: {avg_val_loss:.4f}")
+            streamlit.write(f"Epoch {epoch + 1}, Training Loss: {avg_train_loss:.4f}, Validation Loss: {avg_val_loss:.4f}, Validation Accuracy:{accuracy:.4f}")
 
         return model,train_losses, val_losses
 
