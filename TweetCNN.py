@@ -7,13 +7,13 @@ class TweetCNN(nn.Module):
         super(TweetCNN, self).__init__()
 
         self.conv1 = nn.Conv1d(in_channels=1, out_channels=128, kernel_size=3, padding=1)
-        self.pool1 = nn.MaxPool1d(kernel_size=2, stride=2)
+        self.pool1 = nn.MaxPool1d(kernel_size=2, stride=2)  # Reduces length from 128 to 64
 
         self.conv2 = nn.Conv1d(in_channels=128, out_channels=64, kernel_size=3, padding=1)
-        self.pool2 = nn.MaxPool1d(kernel_size=2, stride=2)
 
-        # Adjusted fully connected layer input size to match flattened size
-        self.fc = nn.Linear(64 * 192, num_classes)  # Output size matches number of classes (11)
+        # Calculate the flattened dimension based on the reduced max_length
+        # After pool1, sequence length is 64; after conv2, it remains 64
+        self.fc = nn.Linear(64 * 64, num_classes)  # Adjusted for 64 sequence length
         self.dropout = nn.Dropout(0.5)
 
 

@@ -37,12 +37,41 @@ class Classify:
 
         tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
         bert_model = BertModel.from_pretrained('bert-base-uncased')
-        inputs = tokenizer(Tweets, padding=True, truncation=True, return_tensors="pt")
-        with torch.no_grad():
-            outputs = bert_model(**inputs)
-        hidden_states = outputs.last_hidden_state
+        # Tokenize the Tweets (no truncation, padding for the whole batch)
+        inputs = tokenizer(Tweets, padding=True, truncation=True, max_length=128, return_tensors="pt")
 
-        return hidden_states.mean(dim=1)
+        # Create a DataLoader to handle batching
+        dataset = TensorDataset(inputs['input_ids'], inputs['attention_mask'])
+        dataloader = DataLoader(dataset, batch_size=32)
+
+        # List to store hidden states
+        all_hidden_states = []
+
+        # Process the data in batches
+        for batch in dataloader:
+            input_ids, attention_mask = batch
+
+            # Ensure that we're in evaluation mode
+            bert_model.eval()
+
+            # No need to compute gradients during inference
+            with torch.no_grad():
+                # Pass the batch through BERT
+                outputs = bert_model(input_ids=input_ids, attention_mask=attention_mask)
+
+            # Extract the hidden states (the last hidden state of the model)
+            hidden_states = outputs.last_hidden_state
+
+            # Average the hidden states along the sequence length (dim=1)
+            avg_hidden_states = hidden_states.mean(dim=1)
+
+            # Append the averaged hidden states for this batch
+            all_hidden_states.append(avg_hidden_states)
+
+        # Concatenate all the batches of hidden states
+        all_hidden_states = torch.cat(all_hidden_states, dim=0)
+
+        return all_hidden_states
 
     def TrainPreparing(self,tweets_embeddings, labels, batch_size,test_size=0.2):
 
