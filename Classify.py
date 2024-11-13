@@ -42,7 +42,7 @@ class Classify:
 
         # Create a DataLoader to handle batching
         dataset = TensorDataset(inputs['input_ids'], inputs['attention_mask'])
-        dataloader = DataLoader(dataset, batch_size=32)
+        dataloader = DataLoader(dataset, batch_size=100)
 
         # List to store hidden states
         all_hidden_states = []

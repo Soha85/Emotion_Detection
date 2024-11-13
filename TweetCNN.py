@@ -7,24 +7,25 @@ class TweetCNN(nn.Module):
         super(TweetCNN, self).__init__()
 
         self.conv1 = nn.Conv1d(in_channels=1, out_channels=128, kernel_size=3, padding=1)
-        self.pool1 = nn.MaxPool1d(kernel_size=2, stride=2)  # Reduces length from 128 to 64
+        self.pool1 = nn.MaxPool1d(kernel_size=2, stride=2)
 
         self.conv2 = nn.Conv1d(in_channels=128, out_channels=64, kernel_size=3, padding=1)
+        self.pool2 = nn.MaxPool1d(kernel_size=2, stride=2)
 
-        # Calculate the flattened dimension based on the reduced max_length
-        # After pool1, sequence length is 64; after conv2, it remains 64
-        self.fc = nn.Linear(64 * 64, num_classes)  # Adjusted for 64 sequence length
+        # Adjusted fully connected layer input size to match flattened size
+        self.fc = nn.Linear(64 * 192, num_classes)  # Output size matches number of classes (11)
         self.dropout = nn.Dropout(0.5)
 
-
+    # Ensure the forward method is correctly defined here
     def forward(self, x):
-        x = x.unsqueeze(1)  # Add channel dimension: [batch_size, 1, 128]
+        x = x.unsqueeze(1)  # Add channel dimension: [batch_size, 1, embed_dim]
 
         x = torch.relu(self.conv1(x))
-        x = self.pool1(x)  # Sequence length now 64
+        x = self.pool1(x)
 
-        x = torch.relu(self.conv2(x))  # Sequence length remains 64
+        x = torch.relu(self.conv2(x))
+        x = self.pool2(x)
 
-        x = x.view(x.size(0), -1)  # Flatten to [batch_size, 64 * 64]
+        x = x.view(x.size(0), -1)  # Flatten for fully connected layer
         x = self.dropout(x)
-        return torch.sigmoid(self.fc(x))  # For multi-label classification
+        return torch.sigmoid(self.fc(x))
