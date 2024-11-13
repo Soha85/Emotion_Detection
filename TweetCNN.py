@@ -16,7 +16,10 @@ class TweetCNN(nn.Module):
         self.sigmoid = nn.Sigmoid()
 
     def forward(self, x):
-        x = x.transpose(1, 2)  # Ensure input shape [batch_size, embed_dim, seq_len]
+        # Assuming x starts as shape [batch_size, embed_dim]
+        x = x.unsqueeze(1)  # Add channel dimension: [batch_size, 1, embed_dim]
+        x = x.transpose(1, 2)  # Shape for Conv1d: [batch_size, embed_dim, 1]
+
         x = torch.relu(self.conv1(x))
         x = self.pool(x)
         x = torch.relu(self.conv2(x))
