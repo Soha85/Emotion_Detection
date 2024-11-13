@@ -17,15 +17,15 @@ class TweetCNN(nn.Module):
         self.dropout = nn.Dropout(0.5)
 
 
-def forward(self, x):
-    x = x.unsqueeze(1)  # Add channel dimension: [batch_size, 1, embed_dim]
+    def forward(self, x):
+        x = x.unsqueeze(1)  # Add channel dimension: [batch_size, 1, embed_dim]
 
-    x = torch.relu(self.conv1(x))
-    x = self.pool1(x)
+        x = torch.relu(self.conv1(x))
+        x = self.pool1(x)
 
-    x = torch.relu(self.conv2(x))
-    x = self.pool2(x)
+        x = torch.relu(self.conv2(x))
+        x = self.pool2(x)
 
-    x = x.view(x.size(0), -1)  # Flatten for fully connected layer
-    x = self.dropout(x)
-    return torch.sigmoid(self.fc(x))  # Sigmoid for multi-label classification
+        x = x.view(x.size(0), -1)  # Flatten for fully connected layer
+        x = self.dropout(x)
+        return torch.sigmoid(self.fc(x))  # Sigmoid for multi-label classification
