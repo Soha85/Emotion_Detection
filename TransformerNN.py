@@ -38,7 +38,12 @@ class LSTMOnBertEmbeddings(nn.Module):
         self.dropout = nn.Dropout(0.5)
 
     def forward(self, x):
-        lstm_out, _ = self.lstm(x)
-        pooled_output = lstm_out.mean(dim=1)  # Mean pooling over sequence
-        x = self.dropout(pooled_output)
-        return torch.sigmoid(self.fc(x))
+        # LSTM returns: (output, (h_n, c_n))
+        lstm_out, (h_n, c_n) = self.lstm(x)
+
+        # Concatenate the final hidden states from both directions
+        final_hidden_state = torch.cat((h_n[-2], h_n[-1]), dim=1)  # Shape: [batch_size, 256]
+
+        # Apply dropout and pass through the fully connected layer
+        x = self.dropout(final_hidden_state)
+        return torch.sigmoid(self.fc(x))  # Output shape: [batch_size, num_classes]
