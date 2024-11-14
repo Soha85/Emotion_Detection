@@ -42,7 +42,7 @@ class LSTMOnBertEmbeddings(nn.Module):
         lstm_out, (h_n, c_n) = self.lstm(x)
 
         # Concatenate the final hidden states from both directions
-        final_hidden_state = torch.cat((h_n[-2], h_n[-1]), dim=1)  # Shape: [batch_size, 256]
+        final_hidden_state = torch.cat((h_n[-2, :, :], h_n[-1, :, :]), dim=1)  # Shape: [batch_size, 256]
 
         # Apply dropout and pass through the fully connected layer
         x = self.dropout(final_hidden_state)
