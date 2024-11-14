@@ -30,16 +30,23 @@ class TransformerOnBertEmbeddings(nn.Module):
         return torch.sigmoid(self.fc(x))  # For multi-label classification
 
 
-def forward(self, x):
-    lstm_out, _ = self.lstm(x)
+class LSTMOnBertEmbeddings(nn.Module):
+    def __init__(self, embed_dim, num_classes):
+        super(LSTMOnBertEmbeddings, self).__init__()
+        self.lstm = nn.LSTM(input_size=embed_dim, hidden_size=128, num_layers=1, bidirectional=True, batch_first=True)
+        self.fc = nn.Linear(128 * 2, num_classes)  # 128*2 for bidirectional
+        self.dropout = nn.Dropout(0.5)
 
-    # Mean pooling over the sequence length (dim=1)
-    pooled_output = lstm_out.mean(dim=1)  # Shape will be [batch_size, 256]
+    def forward(self, x):
+        lstm_out, _ = self.lstm(x)
 
-    # Apply dropout
-    x = self.dropout(pooled_output)
+        # Mean pooling over the sequence length (dim=1)
+        pooled_output = lstm_out.mean(dim=1)  # Shape will be [batch_size, 256]
 
-    # Feed into the fully connected layer
-    output = self.fc(x)  # Shape will be [batch_size, num_classes]
+        # Apply dropout
+        x = self.dropout(pooled_output)
 
-    return torch.sigmoid(output)
+        # Feed into the fully connected layer
+        output = self.fc(x)  # Shape will be [batch_size, num_classes]
+
+        return torch.sigmoid(output)
