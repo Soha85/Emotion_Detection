@@ -82,7 +82,7 @@ with col2:
         if selected_website == 'Bert+CNN':
             model,criterion,optimizer = c.BertCNNBuildModel(st.session_state.tweets_embeddings.shape[1],len(st.session_state.labels))
         else:
-            model, criterion, optimizer = c.BertCNNBuildModel(st.session_state.tweets_embeddings.shape[1],len(st.session_state.labels))
+            model, criterion, optimizer = c.TransformerBuildModel(st.session_state.tweets_embeddings.shape[1],len(st.session_state.labels))
         st.write("Model Built")
         model, train_loss, train_val = c.TrainModel(model, criterion, optimizer, num_epochs, train_loader,
                                                     val_loader)
