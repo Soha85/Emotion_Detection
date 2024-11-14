@@ -11,8 +11,20 @@ class TransformerOnBertEmbeddings(nn.Module):
         self.dropout = nn.Dropout(0.5)
 
     def forward(self, x):
-        x = x.transpose(0, 1)
-        x = self.transformer_encoder(x)
-        cls_output = x[0, :, :]  # Shape is [batch_size, embed_dim]
+        if x.dim() == 2:
+            # If input is [batch_size, embed_dim], assume CLS embeddings only
+            assert x.shape[1] == 768, f"Expected embedding dimension of 768, but got {x.shape[1]}"
+            cls_output = x  # Shape is already [batch_size, embed_dim]
+        elif x.dim() == 3:
+            # If input is [batch_size, seq_len, embed_dim], transpose for TransformerEncoder
+            assert x.shape[2] == 768, f"Expected embedding dimension of 768, but got {x.shape[2]}"
+            x = x.transpose(0, 1)  # Transform to [seq_len, batch_size, embed_dim]
+            x = self.transformer_encoder(x)
+            cls_output = x[0, :, :]  # Extract CLS token, shape [batch_size, embed_dim]
+        else:
+            raise ValueError(
+                "Unexpected input shape: should be [batch_size, embed_dim] or [batch_size, seq_len, embed_dim]")
+
+            # Apply dropout and the fully connected layer
         x = self.dropout(cls_output)
-        return torch.sigmoid(self.fc(x))
+        return torch.sigmoid(self.fc(x))  # For multi-label classification
