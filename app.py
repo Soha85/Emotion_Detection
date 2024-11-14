@@ -84,9 +84,10 @@ with col2:
         elif selected_website == 'Transformer':
             model, criterion, optimizer = c.TransformerBuildModel(st.session_state.tweets_embeddings.shape[1],len(st.session_state.labels))
         else:
-            model, criterion, optimizer = c.LSTMBuildModel(st.session_state.tweets_embeddings.shape[1],64,
+            model, criterion, optimizer = c.LSTMBuildModel(st.session_state.tweets_embeddings.shape[1],128,
                                                                   len(st.session_state.labels))
         st.write("Model Built")
+        st.write(model)
         model, train_loss, train_val = c.TrainModel(model, criterion, optimizer, num_epochs, train_loader,
                                                     val_loader)
         st.write("Model Trained")
