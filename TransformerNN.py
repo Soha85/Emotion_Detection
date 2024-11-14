@@ -33,14 +33,11 @@ class TransformerOnBertEmbeddings(nn.Module):
 class LSTMOnBertEmbeddings(nn.Module):
     def __init__(self, embed_dim,lstm_hidden_dim, num_classes):
         super(LSTMOnBertEmbeddings, self).__init__()
-        self.lstm = nn.LSTM(input_size=embed_dim, hidden_size=lstm_hidden_dim, num_layers=1, bidirectional=True, batch_first=True)
-        self.fc = nn.Linear(lstm_hidden_dim, num_classes)  # 128*2 for bidirectional
+        self.lstm = nn.LSTM(input_size=embed_dim, hidden_size=lstm_hidden_dim, num_layers=1, batch_first=True)
+        self.fc = nn.Linear(lstm_hidden_dim, num_classes)
 
 
     def forward(self, x):
         lstm_out, _ = self.lstm(x)
-        streamlit.write(x.shape)
-        streamlit.write(lstm_out.shape)
-        # Feed into the fully connected layer
         output = self.fc(x)  # Shape will be [batch_size, num_classes]
         return torch.sigmoid(output)
