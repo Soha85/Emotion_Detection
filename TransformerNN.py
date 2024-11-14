@@ -11,7 +11,8 @@ class TransformerOnBertEmbeddings(nn.Module):
         self.dropout = nn.Dropout(0.5)
 
     def forward(self, x):
+        x = x.transpose(0, 1)
         x = self.transformer_encoder(x)
-        cls_output = x[:, 0, :]  # Using CLS token representation
+        cls_output = x[0, :, :]  # Shape is [batch_size, embed_dim]
         x = self.dropout(cls_output)
         return torch.sigmoid(self.fc(x))
