@@ -1,4 +1,4 @@
-from TransformerNN import TransformerOnBertEmbeddings
+from TransformerNN import TransformerOnBertEmbeddings,LSTMOnBertEmbeddings
 import pandas as pd
 import streamlit
 import torch
@@ -108,6 +108,12 @@ class Classify:
 
     def TransformerBuildModel(self,embed_dim,num_classes):
         model = TransformerOnBertEmbeddings(embed_dim=embed_dim, num_classes=num_classes)
+        criterion = nn.BCEWithLogitsLoss()
+        optimizer = optim.Adam(model.parameters(), lr=1e-5)
+        return model,criterion,optimizer
+
+    def LSTMBuildModel(self,embed_dim,num_classes):
+        model = LSTMOnBertEmbeddings(embed_dim=embed_dim, num_classes=num_classes)
         criterion = nn.BCEWithLogitsLoss()
         optimizer = optim.Adam(model.parameters(), lr=1e-5)
         return model,criterion,optimizer

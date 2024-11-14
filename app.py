@@ -68,7 +68,7 @@ with col1:
         st.write("Stack Trace:", e)
         st.error(f"Error loading data: {e}")
 with col2:
-    st.write("**Bert + CNN Model**")
+    st.write("**Multi label Model Testing**")
     selected_website = st.selectbox("Select a website to scrape", ['Bert+CNN', 'Transformer'])
     test_size = st.number_input("Test Size", min_value=0.1, max_value=0.5, step=0.1)
     num_epochs = st.number_input("Epochs Size", min_value=2, max_value=30, step=2)
@@ -81,8 +81,11 @@ with col2:
         model, criterion, optimizer = None,None,None
         if selected_website == 'Bert+CNN':
             model,criterion,optimizer = c.BertCNNBuildModel(st.session_state.tweets_embeddings.shape[1],len(st.session_state.labels))
-        else:
+        elif selected_website == 'Transformer':
             model, criterion, optimizer = c.TransformerBuildModel(st.session_state.tweets_embeddings.shape[1],len(st.session_state.labels))
+        else:
+            model, criterion, optimizer = c.LSTMBuildModel(st.session_state.tweets_embeddings.shape[1],
+                                                                  len(st.session_state.labels))
         st.write("Model Built")
         model, train_loss, train_val = c.TrainModel(model, criterion, optimizer, num_epochs, train_loader,
                                                     val_loader)
