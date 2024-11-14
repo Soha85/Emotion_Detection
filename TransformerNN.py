@@ -35,20 +35,12 @@ class LSTMOnBertEmbeddings(nn.Module):
         super(LSTMOnBertEmbeddings, self).__init__()
         self.lstm = nn.LSTM(input_size=embed_dim, hidden_size=lstm_hidden_dim, num_layers=1, bidirectional=True, batch_first=True)
         self.fc = nn.Linear(lstm_hidden_dim, num_classes)  # 128*2 for bidirectional
-        self.dropout = nn.Dropout(0.5)
+
 
     def forward(self, x):
         lstm_out, _ = self.lstm(x)
         streamlit.write(x.shape)
         streamlit.write(lstm_out.shape)
-
-        # Mean pooling over the sequence length (dim=1)
-        pooled_output = lstm_out.mean(dim=1)  # Shape will be [batch_size, 256]
-        streamlit.write(pooled_output.shape)
-        # Apply dropout
-        x = self.dropout(pooled_output)
-        streamlit.write(x.shape)
         # Feed into the fully connected layer
         output = self.fc(x)  # Shape will be [batch_size, num_classes]
-
         return torch.sigmoid(output)
