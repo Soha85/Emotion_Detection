@@ -39,5 +39,6 @@ class LSTMOnBertEmbeddings(nn.Module):
 
     def forward(self, x):
         lstm_out, _ = self.lstm(x)
-        output = self.fc(x)  # Shape will be [batch_size, num_classes]
+        streamlit.write(lstm_out.shape)
+        output = self.fc(lstm_out)  # Shape will be [batch_size, num_classes]
         return torch.sigmoid(output)
