@@ -1,7 +1,7 @@
 import torch.nn as nn
 from torch.nn import TransformerEncoder, TransformerEncoderLayer
 import torch
-
+import streamlit
 class TransformerOnBertEmbeddings(nn.Module):
     def __init__(self, embed_dim, num_classes, nhead=8, num_layers=2):
         super(TransformerOnBertEmbeddings, self).__init__()
@@ -39,6 +39,8 @@ class LSTMOnBertEmbeddings(nn.Module):
 
     def forward(self, x):
         lstm_out, _ = self.lstm(x)
+        streamlit.write(x.shape)
+        streamlit.write(lstm_out.shape)
 
         # Mean pooling over the sequence length (dim=1)
         pooled_output = lstm_out.mean(dim=1)  # Shape will be [batch_size, 256]
