@@ -112,8 +112,8 @@ class Classify:
         optimizer = optim.Adam(model.parameters(), lr=1e-5)
         return model,criterion,optimizer
 
-    def LSTMBuildModel(self,embed_dim,num_classes):
-        model = LSTMOnBertEmbeddings(embed_dim=embed_dim, num_classes=num_classes)
+    def LSTMBuildModel(self,embed_dim,lstm_hidden_dim,num_classes):
+        model = LSTMOnBertEmbeddings(embed_dim=embed_dim, lstm_hidden_dim=lstm_hidden_dim, num_classes=num_classes)
         criterion = nn.BCEWithLogitsLoss()
         optimizer = optim.Adam(model.parameters(), lr=1e-5)
         return model,criterion,optimizer
