@@ -69,7 +69,7 @@ with col1:
         st.error(f"Error loading data: {e}")
 with col2:
     st.write("**Multi label Model Testing**")
-    selected_website = st.selectbox("Select a website to scrape", ['Bert+CNN', 'Transformer'])
+    selected_website = st.selectbox("Select a model to classify after Bert Embedding", ['CNN', 'LSTM','Transformer'])
     test_size = st.number_input("Test Size", min_value=0.1, max_value=0.5, step=0.1)
     num_epochs = st.number_input("Epochs Size", min_value=2, max_value=30, step=2)
     batch_size = st.number_input("Batch Size", min_value=5, max_value=50, step=5)
@@ -79,7 +79,7 @@ with col2:
             test_size)
         st.write("Data split completed")
         model, criterion, optimizer = None,None,None
-        if selected_website == 'Bert+CNN':
+        if selected_website == 'CNN':
             model,criterion,optimizer = c.BertCNNBuildModel(st.session_state.tweets_embeddings.shape[1],len(st.session_state.labels))
         elif selected_website == 'Transformer':
             model, criterion, optimizer = c.TransformerBuildModel(st.session_state.tweets_embeddings.shape[1],len(st.session_state.labels))
