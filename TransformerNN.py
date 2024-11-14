@@ -34,7 +34,7 @@ class LSTMOnBertEmbeddings(nn.Module):
     def __init__(self, embed_dim,lstm_hidden_dim, num_classes):
         super(LSTMOnBertEmbeddings, self).__init__()
         self.lstm = nn.LSTM(input_size=embed_dim, hidden_size=lstm_hidden_dim, num_layers=1, bidirectional=True, batch_first=True)
-        self.fc = nn.Linear(lstm_hidden_dim * 2, num_classes)  # 128*2 for bidirectional
+        self.fc = nn.Linear(lstm_hidden_dim, num_classes)  # 128*2 for bidirectional
         self.dropout = nn.Dropout(0.5)
 
     def forward(self, x):
