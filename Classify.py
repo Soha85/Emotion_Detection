@@ -1,3 +1,4 @@
+from TransformerNN import TransformerOnBertEmbeddings
 import pandas as pd
 import streamlit
 import torch
@@ -99,8 +100,14 @@ class Classify:
 
         return train_loader,test_loader,val_loader,len(labels)
 
-    def BuildModel(self,embed_dim,num_classes):
+    def BertCNNBuildModel(self,embed_dim,num_classes):
         model = TweetCNN(embed_dim=embed_dim, num_classes=num_classes)
+        criterion = nn.BCEWithLogitsLoss()
+        optimizer = optim.Adam(model.parameters(), lr=1e-5)
+        return model,criterion,optimizer
+
+    def TransformerBuildModel(self,embed_dim,num_classes):
+        model = TransformerOnBertEmbeddings(embed_dim=embed_dim, num_classes=num_classes)
         criterion = nn.BCEWithLogitsLoss()
         optimizer = optim.Adam(model.parameters(), lr=1e-5)
         return model,criterion,optimizer

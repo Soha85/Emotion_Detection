@@ -69,43 +69,24 @@ with col1:
         st.error(f"Error loading data: {e}")
 with col2:
     st.write("**Bert + CNN Model**")
+    selected_website = st.selectbox("Select a website to scrape", ['Bert+CNN', 'Transformer'])
     test_size = st.number_input("Test Size", min_value=0.1, max_value=0.5, step=0.1)
     num_epochs = st.number_input("Epochs Size", min_value=2, max_value=30, step=2)
     batch_size = st.number_input("Batch Size", min_value=5, max_value=50, step=5)
-    if st.button("Split Data") and st.session_state.tweets_embeddings is not None:
+    if st.button("Split, Build, Train & Test") and st.session_state.tweets_embeddings is not None:
         train_loader, test_loader, val_loader, labels_n = c.TrainPreparing(
-            st.session_state.tweets_embeddings, st.session_state.tweets[st.session_state.labels].values,batch_size, test_size)
+            st.session_state.tweets_embeddings, st.session_state.tweets[st.session_state.labels].values, batch_size,
+            test_size)
         st.write("Data split completed")
-        model,criterion,optimizer = c.BuildModel(st.session_state.tweets_embeddings.shape[1],len(st.session_state.labels))
+        model, criterion, optimizer = None,None,None
+        if selected_website == 'Bert+CNN':
+            model,criterion,optimizer = c.BertCNNBuildModel(st.session_state.tweets_embeddings.shape[1],len(st.session_state.labels))
+        else:
+            model, criterion, optimizer = c.BertCNNBuildModel(st.session_state.tweets_embeddings.shape[1],len(st.session_state.labels))
         st.write("Model Built")
-        model,train_loss,train_val = c.TrainModel(model,criterion,optimizer,num_epochs,train_loader,val_loader)
+        model, train_loss, train_val = c.TrainModel(model, criterion, optimizer, num_epochs, train_loader,
+                                                    val_loader)
         st.write("Model Trained")
-        st.write(c.TestModel(model,test_loader))
-        c.plot_loss_curves(train_loss,train_val)
-    # try:
-    #     # Ensure embeddings and tweets are loaded before allowing split
-    #     test_size = st.number_input("Test Size", min_value=0.1, max_value=0.5, step=0.1)
-    #     if st.button("Split Data") and st.session_state.embeddings is not None:
-    #         st.write(st.session_state.embeddings.shape)
-    #         st.write(st.session_state.tweets[st.session_state.labels].shape)
-    #         # Ensure embeddings are non-empty and tweets are loaded correctly
-    #         if len(st.session_state.embeddings) > 0:
-    #             try:
-    #                 # Ensure labels is accessible and used correctly
-    #                 if isinstance(st.session_state.labels, list):
-    #                     train_loader, test_loader, labels_n = c.TrainPreparing(
-    #                         st.session_state.embeddings.values, st.session_state.tweets[st.session_state.labels].values, test_size
-    #                     )
-    #                     st.write("Data split completed")
-    #                 else:
-    #                     st.error("Labels must be a list of column names or indices for multi-label data.")
-    #
-    #             except Exception as e:
-    #                 st.error(f"Error in data splitting: {e}")
-    #         else:
-    #
-    #             st.error("No embeddings available to split. Please load and preprocess data first.")
-    # except Exception as e:
-    #     st.write("Stack Trace:", e)
-    #     st.error(f"Error Build, Training & Testing Model: {e}")
+        st.write(c.TestModel(model, test_loader))
+        c.plot_loss_curves(train_loss, train_val)
 
