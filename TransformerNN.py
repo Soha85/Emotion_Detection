@@ -44,10 +44,10 @@ class LSTMOnBertEmbeddings(nn.Module):
 
         # Mean pooling over the sequence length (dim=1)
         pooled_output = lstm_out.mean(dim=1)  # Shape will be [batch_size, 256]
-
+        streamlit.write(pooled_output.shape)
         # Apply dropout
         x = self.dropout(pooled_output)
-
+        streamlit.write(x.shape)
         # Feed into the fully connected layer
         output = self.fc(x)  # Shape will be [batch_size, num_classes]
 
