@@ -25,7 +25,7 @@ c = Classify()
 with col1:
     st.write("**Loading + Preprocessing Data**")
     try:
-        num = st.number_input("No. of Tweets", min_value=500, max_value=3000, step=500)
+        num = st.number_input("No. of Tweets", min_value=500, max_value=6000, step=500)
         if st.button('Load Data'):
             # Load data
             Tweets, labels = c.loadData()
@@ -92,6 +92,5 @@ with col2:
                                                     val_loader)
         st.write("Model Trained")
         st.write(c.TestModel(model, test_loader))
-        c.plot_loss_curves(train_loss, val_loss)
-        c.plot_accuracy(train_acc, val_acc)
+        c.plot_loss_curves(train_loss, val_loss, train_acc, val_acc)
 

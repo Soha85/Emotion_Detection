@@ -47,7 +47,7 @@ class Classify:
 
         # Create a DataLoader to handle batching
         dataset = TensorDataset(inputs['input_ids'], inputs['attention_mask'])
-        dataloader = DataLoader(dataset, batch_size=300)
+        dataloader = DataLoader(dataset, batch_size=500)
 
         # List to store hidden states
         all_hidden_states = []
@@ -207,22 +207,14 @@ class Classify:
         streamlit.write(f"Classification Report:\n{class_report}")
         return "Test Accuracy:" + str(correct / total)
 
-    def plot_loss_curves(self,train_losses, val_losses):
+    def plot_loss_curves(self,train_losses, val_losses, train_acc, val_acc):
         plt.figure(figsize=(10, 5))
         plt.plot(train_losses, label="Training Loss")
         plt.plot(val_losses, label="Validation Loss")
-        plt.xlabel("Epochs")
-        plt.ylabel("Loss")
-        plt.title("Training and Validation Loss Over Epochs")
-        plt.legend()
-        streamlit.pyplot(plt)
-
-    def plot_accuracy(self,train_acc, val_acc):
-        plt.figure(figsize=(10, 5))
         plt.plot(train_acc, label="Training Accuracy")
         plt.plot(val_acc, label="Validation Accuracy")
         plt.xlabel("Epochs")
-        plt.ylabel("Accuracy")
-        plt.title("Training and Validation Accuracy")
+        plt.ylabel("Loss & Accuracy")
+        plt.title("Training and Validation Accuracy & losses")
         plt.legend()
         streamlit.pyplot(plt)
