@@ -153,12 +153,14 @@ class Classify:
                 correct_train += (preds == y_batch).all(dim=1).sum().item()  # Correctly classified samples
                 total_train += y_batch.size(0)  # Total samples in batch
                 all_preds.append(preds.cpu().numpy())
+                streamlit.write(len(all_preds))
                 all_labels.append(y_batch.cpu().numpy())
 
             avg_train_loss = running_loss / len(train_loader)
             train_accuracy = correct_train / total_train  # Accuracy for the epoch
             train_losses.append(avg_train_loss)
             train_accuracies.append(train_accuracy)
+            streamlit.write(np.vstack(all_labels).shape)
             train_hamming_losses.append(hamming_loss(np.vstack(all_labels), np.vstack(all_preds)))
             train_hamming_scores.append(self.hamming_score(np.vstack(all_labels), np.vstack(all_preds)))
 
