@@ -91,6 +91,6 @@ with col2:
         model, train_loss, val_loss, train_acc, val_acc = c.TrainModel(model, criterion, optimizer, num_epochs, train_loader,
                                                     val_loader)
         st.write("Model Trained")
-        st.write(c.TestModel(model, test_loader))
+        st.write(c.TestModel(model, test_loader,st.session_state.labels))
         c.plot_loss_curves(train_loss, val_loss, train_acc, val_acc)
 
