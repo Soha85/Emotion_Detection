@@ -158,7 +158,7 @@ class Classify:
             train_accuracy = correct_train / total_train  # Accuracy for the epoch
             train_losses.append(avg_train_loss)
             train_accuracies.append(train_accuracy)
-            train_hamming_losses.append(np.vstack(val_labels), np.vstack(val_pred))
+            train_hamming_losses.append(hamming_loss(np.vstack(all_labels), np.vstack(all_preds)))
             train_hamming_scores.append(self.hamming_score(np.vstack(all_labels), np.vstack(all_preds)))
 
             # Validation phase
