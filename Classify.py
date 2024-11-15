@@ -141,27 +141,24 @@ class Classify:
             for X_batch, y_batch in train_loader:
                 optimizer.zero_grad()
                 outputs = model(X_batch)  # Outputs: [batch_size, num_classes]
-
                 # Compute loss
                 loss = criterion(outputs, y_batch)
                 loss.backward()
                 optimizer.step()
-                running_loss += loss.item()
 
+                running_loss += loss.item()
                 # Compute accuracy (multi-label classification)
                 preds = (outputs >= threshold).float()  # Predictions based on threshold
                 correct_train += (preds == y_batch).all(dim=1).sum().item()  # Correctly classified samples
                 total_train += y_batch.size(0)  # Total samples in batch
                 all_preds.append(preds.cpu().numpy())
-                streamlit.write(len(all_preds))
                 all_labels.append(y_batch.cpu().numpy())
 
             avg_train_loss = running_loss / len(train_loader)
             train_accuracy = correct_train / total_train  # Accuracy for the epoch
             train_losses.append(avg_train_loss)
             train_accuracies.append(train_accuracy)
-            streamlit.write(np.vstack(all_labels).shape)
-            train_hamming_losses.append(hamming_loss(np.vstack(all_labels), np.vstack(all_preds)))
+            train_hamming_losses.append(np.vstack(val_labels), np.vstack(val_pred))
             train_hamming_scores.append(self.hamming_score(np.vstack(all_labels), np.vstack(all_preds)))
 
             # Validation phase
@@ -174,11 +171,10 @@ class Classify:
             with torch.no_grad():
                 for X_v, y_v in val_loader:
                     outputs = model(X_v)
-
                     # Compute loss
                     loss = criterion(outputs, y_v)
-                    val_running_loss += loss.item()
 
+                    val_running_loss += loss.item()
                     # Compute accuracy
                     preds = (outputs >= threshold).float()  # Predictions based on threshold
                     correct_val += (preds == y_v).all(dim=1).sum().item()
@@ -197,8 +193,8 @@ class Classify:
             streamlit.write(f"Epoch {epoch + 1}, "
                      f"Training Loss: {avg_train_loss:.4f}, Training Accuracy: {train_accuracy:.4f}, "
                      f"Validation Loss: {avg_val_loss:.4f}, Validation Accuracy: {val_accuracy:.4f},"
-                     f"Training Hamming loss:{train_hamming_losses:.4f}:, Training Hamming Score:{train_hamming_losses:.4f}"
-                     f"Validation Hamming loss:{val_hamming_losses:.4f}, Validation Hamming Score:{val_hamming_losses:.4f}")
+                     f"Training Hamming loss:{train_hamming_losses[-1]:.4f}:, Training Hamming Score:{train_hamming_losses[-1]:.4f}"
+                     f"Validation Hamming loss:{val_hamming_losses[-1]:.4f}, Validation Hamming Score:{val_hamming_losses[-1]:.4f}")
 
         # Return model and metrics
         return model, train_losses, val_losses, train_accuracies, val_accuracies
