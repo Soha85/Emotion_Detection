@@ -88,9 +88,10 @@ with col2:
                                                                   len(st.session_state.labels))
         st.write("Model Built")
         st.write(model)
-        model, train_loss, train_val = c.TrainModel(model, criterion, optimizer, num_epochs, train_loader,
+        model, train_loss, val_loss, train_acc, val_acc = c.TrainModel(model, criterion, optimizer, num_epochs, train_loader,
                                                     val_loader)
         st.write("Model Trained")
         st.write(c.TestModel(model, test_loader))
-        c.plot_loss_curves(train_loss, train_val)
+        c.plot_loss_curves(train_loss, val_loss)
+        c.plot_accuracy(train_acc, val_acc)
 

@@ -13,6 +13,10 @@ from TweetCNN import TweetCNN
 import torch.optim as optim
 import matplotlib.pyplot as plt
 import torch.nn as nn
+from sklearn.metrics import roc_curve, auc
+from sklearn.metrics import classification_report
+
+
 
 # Load pre-trained BERT tokenizer and model
 
@@ -118,62 +122,90 @@ class Classify:
         optimizer = optim.Adam(model.parameters(), lr=1e-5)
         return model,criterion,optimizer
 
-    def TrainModel(self,model,criterion,optimizer,num_epochs,train_loader,val_loader):
+    def train_model(self,model, train_loader, val_loader, criterion, optimizer, num_epochs, threshold=0.5):
         train_losses = []
         val_losses = []
+        train_accuracies = []
+        val_accuracies = []
 
         for epoch in range(num_epochs):
+            # Training phase
             model.train()
             running_loss = 0.0
+            correct_train = 0
+            total_train = 0
 
             for X_batch, y_batch in train_loader:
                 optimizer.zero_grad()
-                outputs = model(X_batch)
+                outputs = model(X_batch)  # Outputs: [batch_size, num_classes]
+
+                # Compute loss
                 loss = criterion(outputs, y_batch)
                 loss.backward()
                 optimizer.step()
                 running_loss += loss.item()
 
-            #streamlit.write(f"Epoch {epoch + 1}, Loss: {running_loss / len(train_loader)}")
+                # Compute accuracy (multi-label classification)
+                preds = (outputs >= threshold).float()  # Predictions based on threshold
+                correct_train += (preds == y_batch).all(dim=1).sum().item()  # Correctly classified samples
+                total_train += y_batch.size(0)  # Total samples in batch
 
-            # Record average loss over training batches
             avg_train_loss = running_loss / len(train_loader)
+            train_accuracy = correct_train / total_train  # Accuracy for the epoch
             train_losses.append(avg_train_loss)
+            train_accuracies.append(train_accuracy)
 
-            # Validation phase (optional)
+            # Validation phase
             model.eval()
             val_running_loss = 0.0
-            correct, total = 0, 0
+            correct_val = 0
+            total_val = 0
+
             with torch.no_grad():
-                for X_v, y_v in val_loader:
-                    outputs = model(X_v)
-                    loss = criterion(outputs, y_v)
+                for X_batch, y_batch in val_loader:
+                    outputs = model(X_batch)
+
+                    # Compute loss
+                    loss = criterion(outputs, y_batch)
                     val_running_loss += loss.item()
-                    predicted = outputs.round()
-                    correct += (predicted == y_v).sum().item()
-                    total += y_v.numel()
-            accuracy = correct / total
+
+                    # Compute accuracy
+                    preds = (outputs >= threshold).float()  # Predictions based on threshold
+                    correct_val += (preds == y_batch).all(dim=1).sum().item()
+                    total_val += y_batch.size(0)
+
             avg_val_loss = val_running_loss / len(val_loader)
+            val_accuracy = correct_val / total_val  # Accuracy for the epoch
             val_losses.append(avg_val_loss)
+            val_accuracies.append(val_accuracy)
 
             # Print or log progress
-            streamlit.write(f"Epoch {epoch + 1}, Training Loss: {avg_train_loss:.4f}, Validation Loss: {avg_val_loss:.4f}, Validation Accuracy:{accuracy:.4f}")
+            streamlit.write(f"Epoch {epoch + 1}, "
+                     f"Training Loss: {avg_train_loss:.4f}, Training Accuracy: {train_accuracy:.4f}, "
+                     f"Validation Loss: {avg_val_loss:.4f}, Validation Accuracy: {val_accuracy:.4f}")
 
-        return model,train_losses, val_losses
+        # Return model and metrics
+        return model, train_losses, val_losses, train_accuracies, val_accuracies
 
-    def TestModel(self,model,test_loader):
+    def TestModel(self,model,test_loader,labels,threshold=0.5):
         # Testing loop
         model.eval()
         correct, total = 0, 0
+        all_preds, all_labels = [],[]
         with torch.no_grad():
             for X_batch, y_batch in test_loader:
                 outputs = model(X_batch)
-                predicted = outputs.round()  # Round predictions to get binary output for each label
-                correct += (predicted == y_batch).sum().item()
-                total += y_batch.numel()
+                preds = (outputs >= threshold).float()  # Predictions based on threshold
+                correct += (preds == y_batch).all(dim=1).sum().item()
+                total += y_batch.size(0)
+                all_preds.append(preds.cpu())
+                all_labels.append(y_batch.cpu())
 
-        accuracy = correct / total
-        return "Test Accuracy:" + str(accuracy)
+        class_report = classification_report(all_labels, all_preds,
+                                             target_names=labels,
+                                             zero_division=0)
+        streamlit.write(f"Classification Report:\n{class_report}")
+        return "Test Accuracy:" + str(correct / total)
 
     def plot_loss_curves(self,train_losses, val_losses):
         plt.figure(figsize=(10, 5))
@@ -182,5 +214,15 @@ class Classify:
         plt.xlabel("Epochs")
         plt.ylabel("Loss")
         plt.title("Training and Validation Loss Over Epochs")
+        plt.legend()
+        streamlit.pyplot(plt)
+
+    def plot_accuracy(self,train_acc, val_acc):
+        plt.figure(figsize=(10, 5))
+        plt.plot(train_acc, label="Training Accuracy")
+        plt.plot(val_acc, label="Validation Accuracy")
+        plt.xlabel("Epochs")
+        plt.ylabel("Accuracy")
+        plt.title("Training and Validation Accuracy")
         plt.legend()
         streamlit.pyplot(plt)
