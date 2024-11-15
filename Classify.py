@@ -1,4 +1,5 @@
 from TransformerNN import TransformerOnBertEmbeddings,LSTMOnBertEmbeddings
+import numpy as np
 import pandas as pd
 import streamlit
 import torch
@@ -14,7 +15,7 @@ import torch.optim as optim
 import matplotlib.pyplot as plt
 import torch.nn as nn
 from sklearn.metrics import roc_curve, auc
-from sklearn.metrics import classification_report
+from sklearn.metrics import classification_report, hamming_loss
 
 
 
@@ -127,6 +128,8 @@ class Classify:
         val_losses = []
         train_accuracies = []
         val_accuracies = []
+        train_hamming_losses , train_hamming_scores = [],[]
+        val_hamming_losses, val_hamming_scores = [], []
 
         for epoch in range(num_epochs):
             # Training phase
@@ -134,7 +137,7 @@ class Classify:
             running_loss = 0.0
             correct_train = 0
             total_train = 0
-
+            all_preds, all_labels = [],[]
             for X_batch, y_batch in train_loader:
                 optimizer.zero_grad()
                 outputs = model(X_batch)  # Outputs: [batch_size, num_classes]
@@ -149,17 +152,22 @@ class Classify:
                 preds = (outputs >= threshold).float()  # Predictions based on threshold
                 correct_train += (preds == y_batch).all(dim=1).sum().item()  # Correctly classified samples
                 total_train += y_batch.size(0)  # Total samples in batch
+                all_preds.append(preds.cpu().numpy())
+                all_labels.append(y_batch.cpu().numpy())
 
             avg_train_loss = running_loss / len(train_loader)
             train_accuracy = correct_train / total_train  # Accuracy for the epoch
             train_losses.append(avg_train_loss)
             train_accuracies.append(train_accuracy)
+            train_hamming_losses.append(hamming_loss(np.vstack(all_labels), np.vstack(all_preds)))
+            train_hamming_scores.append(self.hamming_score(np.vstack(all_labels), np.vstack(all_preds)))
 
             # Validation phase
             model.eval()
             val_running_loss = 0.0
             correct_val = 0
             total_val = 0
+            val_pred, val_labels = [],[]
 
             with torch.no_grad():
                 for X_v, y_v in val_loader:
@@ -173,16 +181,22 @@ class Classify:
                     preds = (outputs >= threshold).float()  # Predictions based on threshold
                     correct_val += (preds == y_v).all(dim=1).sum().item()
                     total_val += y_v.size(0)
+                    val_pred.append(preds.cpu().numpy())
+                    val_labels.append(y_v.cpu().numpy())
 
             avg_val_loss = val_running_loss / len(val_loader)
             val_accuracy = correct_val / total_val  # Accuracy for the epoch
             val_losses.append(avg_val_loss)
             val_accuracies.append(val_accuracy)
+            val_hamming_losses.append(hamming_loss(np.vstack(val_labels), np.vstack(val_pred)))
+            val_hamming_scores.append(self.hamming_score(np.vstack(val_labels), np.vstack(val_pred)))
 
             # Print or log progress
             streamlit.write(f"Epoch {epoch + 1}, "
                      f"Training Loss: {avg_train_loss:.4f}, Training Accuracy: {train_accuracy:.4f}, "
-                     f"Validation Loss: {avg_val_loss:.4f}, Validation Accuracy: {val_accuracy:.4f}")
+                     f"Validation Loss: {avg_val_loss:.4f}, Validation Accuracy: {val_accuracy:.4f},"
+                     f"Training Hamming loss:{train_hamming_losses:.4f}:, Training Hamming Score:{train_hamming_losses:.4f}"
+                     f"Validation Hamming loss:{val_hamming_losses:.4f}, Validation Hamming Score:{val_hamming_losses:.4f}")
 
         # Return model and metrics
         return model, train_losses, val_losses, train_accuracies, val_accuracies
@@ -198,15 +212,29 @@ class Classify:
                 preds = (outputs >= threshold).float()  # Predictions based on threshold
                 correct += (preds == y_batch).all(dim=1).sum().item()
                 total += y_batch.size(0)
-                all_preds.append(preds.cpu())
-                all_labels.append(y_batch.cpu())
+                all_preds.append(preds.cpu().numpy())
+                all_labels.append(y_batch.cpu().numpy())
 
-        class_report = classification_report(all_labels, all_preds,
+        class_report = classification_report(np.vstack(all_labels), np.vstack(all_preds),
                                              target_names=labels,
                                              zero_division=0)
+        streamlit.write(f"Hamming loss:\n{hamming_loss(np.vstack(all_labels), np.vstack(all_preds))}")
+        streamlit.write(f"Hamming Acc:\n{self.hamming_score(np.vstack(all_labels), np.vstack(all_preds))}")
         streamlit.write(f"Classification Report:\n{class_report}")
         return "Test Accuracy:" + str(correct / total)
 
+    def hamming_score(self,y_true, y_pred):
+        """
+        Computes the Hamming Score, a.k.a. Subset Accuracy, for multi-label classification.
+        """
+        scores = []
+        for true, pred in zip(y_true, y_pred):
+            # Intersection divided by the union of true and predicted labels
+            if np.sum(np.logical_or(true, pred)) == 0:
+                scores.append(1)  # Avoid division by zero when no labels exist
+            else:
+                scores.append(np.sum(np.logical_and(true, pred)) / np.sum(np.logical_or(true, pred)))
+        return np.mean(scores)
     def plot_curves(self,train_losses, val_losses, train_acc, val_acc):
         plt.figure(figsize=(10, 5))
         plt.plot(train_losses, label="Training Loss")
