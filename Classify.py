@@ -122,7 +122,7 @@ class Classify:
         optimizer = optim.Adam(model.parameters(), lr=1e-5)
         return model,criterion,optimizer
 
-    def train_model(self,model, train_loader, val_loader, criterion, optimizer, num_epochs, threshold=0.5):
+    def TrainModel(self,model, train_loader, val_loader, criterion, optimizer, num_epochs, threshold=0.5):
         train_losses = []
         val_losses = []
         train_accuracies = []
