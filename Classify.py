@@ -122,7 +122,7 @@ class Classify:
         optimizer = optim.Adam(model.parameters(), lr=1e-5)
         return model,criterion,optimizer
 
-    def TrainModel(self,model, train_loader, val_loader, criterion, optimizer, num_epochs, threshold=0.5):
+    def TrainModel(self, model, criterion, optimizer, num_epochs, train_loader, val_loader, threshold=0.5):
         train_losses = []
         val_losses = []
         train_accuracies = []
@@ -162,17 +162,17 @@ class Classify:
             total_val = 0
 
             with torch.no_grad():
-                for X_batch, y_batch in val_loader:
-                    outputs = model(X_batch)
+                for X_v, y_v in val_loader:
+                    outputs = model(X_v)
 
                     # Compute loss
-                    loss = criterion(outputs, y_batch)
+                    loss = criterion(outputs, y_v)
                     val_running_loss += loss.item()
 
                     # Compute accuracy
                     preds = (outputs >= threshold).float()  # Predictions based on threshold
-                    correct_val += (preds == y_batch).all(dim=1).sum().item()
-                    total_val += y_batch.size(0)
+                    correct_val += (preds == y_v).all(dim=1).sum().item()
+                    total_val += y_v.size(0)
 
             avg_val_loss = val_running_loss / len(val_loader)
             val_accuracy = correct_val / total_val  # Accuracy for the epoch
@@ -207,7 +207,7 @@ class Classify:
         streamlit.write(f"Classification Report:\n{class_report}")
         return "Test Accuracy:" + str(correct / total)
 
-    def plot_loss_curves(self,train_losses, val_losses, train_acc, val_acc):
+    def plot_curves(self,train_losses, val_losses, train_acc, val_acc):
         plt.figure(figsize=(10, 5))
         plt.plot(train_losses, label="Training Loss")
         plt.plot(val_losses, label="Validation Loss")

@@ -92,5 +92,5 @@ with col2:
                                                     val_loader)
         st.write("Model Trained")
         st.write(c.TestModel(model, test_loader,st.session_state.labels))
-        c.plot_loss_curves(train_loss, val_loss, train_acc, val_acc)
+        c.plot_curves(train_loss, val_loss, train_acc, val_acc)
 
