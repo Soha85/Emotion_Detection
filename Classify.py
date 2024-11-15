@@ -192,8 +192,8 @@ class Classify:
             # Print or log progress
             streamlit.write(f"Epoch {epoch + 1}, "
                      f"Training Loss: {avg_train_loss:.4f}, Training Accuracy: {train_accuracy:.4f}, "
-                     f"Validation Loss: {avg_val_loss:.4f}, Validation Accuracy: {val_accuracy:.4f},"
-                     f"Training Hamming loss:{train_hamming_losses[-1]:.4f}:, Training Hamming Score:{train_hamming_losses[-1]:.4f}"
+                     f"Validation Loss: {avg_val_loss:.4f}, Validation Accuracy: {val_accuracy:.4f}, "
+                     f"Training Hamming loss:{train_hamming_losses[-1]:.4f}, Training Hamming Score:{train_hamming_losses[-1]:.4f}, "
                      f"Validation Hamming loss:{val_hamming_losses[-1]:.4f}, Validation Hamming Score:{val_hamming_losses[-1]:.4f}")
 
         # Return model and metrics
