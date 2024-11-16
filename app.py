@@ -72,7 +72,7 @@ with col2:
     selected_website = st.selectbox("Select a model to classify after Bert Embedding", ['CNN', 'LSTM','Transformer'])
     test_size = st.number_input("Test Size", min_value=0.1, max_value=0.5, step=0.1)
     num_epochs = st.number_input("Epochs Size", min_value=2, max_value=50, step=2)
-    batch_size = st.number_input("Batch Size", min_value=5, max_value=500, step=10)
+    batch_size = st.number_input("Batch Size", min_value=32, max_value=500, step=2)
     if st.button("Split, Build, Train & Test") and st.session_state.tweets_embeddings is not None:
         train_loader, test_loader, val_loader, labels_n = c.TrainPreparing(
             st.session_state.tweets_embeddings, st.session_state.tweets[st.session_state.labels].values, batch_size,
