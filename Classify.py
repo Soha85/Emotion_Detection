@@ -236,29 +236,27 @@ class Classify:
     def plot_curves(self,train_losses, val_losses, train_acc, val_acc):
         epochs = range(1, len(train_losses) + 1)
 
-        # Create a figure and primary axis
-        fig, ax1 = plt.subplots(figsize=(10, 6))
+        # Create subplots
+        fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(10, 8), sharex=True)
 
-        # Plot losses on the primary y-axis
+        # Plot losses in the first subplot
         ax1.plot(epochs, train_losses, label="Training Loss", color="blue")
         ax1.plot(epochs, val_losses, label="Validation Loss", color="orange")
-        ax1.set_xlabel("Epochs")
-        ax1.set_ylabel("Loss", color="blue")
-        ax1.tick_params(axis='y', labelcolor="blue")
-        ax1.legend(loc="upper left")
+        ax1.set_ylabel("Loss")
+        ax1.set_title("Training and Validation Loss")
+        ax1.legend()
         ax1.grid()
 
-        # Create a secondary y-axis sharing the same x-axis
-        ax2 = ax1.twinx()
-        ax2.plot(epochs, train_acc, label="Training Accuracy", color="green", linestyle="--")
-        ax2.plot(epochs, val_acc, label="Validation Accuracy", color="red", linestyle="--")
-        ax2.set_ylabel("Accuracy", color="green")
-        ax2.tick_params(axis='y', labelcolor="green")
-        ax2.legend(loc="upper right")
+        # Plot accuracies in the second subplot
+        ax2.plot(epochs, train_acc, label="Training Accuracy", color="green")
+        ax2.plot(epochs, val_acc, label="Validation Accuracy", color="red")
+        ax2.set_ylabel("Accuracy")
+        ax2.set_xlabel("Epochs")
+        ax2.set_title("Training and Validation Accuracy")
+        ax2.legend()
+        ax2.grid()
 
-        # Set title and layout
-        plt.title("Training and Validation Loss & Accuracy")
+        # Adjust layout and display the figure in Streamlit
         plt.tight_layout()
 
-        # Display the plot in Streamlit
         streamlit.pyplot(fig)
