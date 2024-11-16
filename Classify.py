@@ -234,13 +234,31 @@ class Classify:
                 scores.append(np.sum(np.logical_and(true, pred)) / np.sum(np.logical_or(true, pred)))
         return np.mean(scores)
     def plot_curves(self,train_losses, val_losses, train_acc, val_acc):
-        plt.figure(figsize=(10, 5))
-        plt.plot(train_losses, label="Training Loss")
-        plt.plot(val_losses, label="Validation Loss")
-        plt.plot(train_acc, label="Training Accuracy")
-        plt.plot(val_acc, label="Validation Accuracy")
-        plt.xlabel("Epochs")
-        plt.ylabel("Loss & Accuracy")
-        plt.title("Training and Validation Accuracy & losses")
-        plt.legend()
-        streamlit.pyplot(plt)
+        epochs = range(1, len(train_losses) + 1)
+
+        # Create a figure and primary axis
+        fig, ax1 = plt.subplots(figsize=(10, 6))
+
+        # Plot losses on the primary y-axis
+        ax1.plot(epochs, train_losses, label="Training Loss", color="blue")
+        ax1.plot(epochs, val_losses, label="Validation Loss", color="orange")
+        ax1.set_xlabel("Epochs")
+        ax1.set_ylabel("Loss", color="blue")
+        ax1.tick_params(axis='y', labelcolor="blue")
+        ax1.legend(loc="upper left")
+        ax1.grid()
+
+        # Create a secondary y-axis sharing the same x-axis
+        ax2 = ax1.twinx()
+        ax2.plot(epochs, train_acc, label="Training Accuracy", color="green", linestyle="--")
+        ax2.plot(epochs, val_acc, label="Validation Accuracy", color="red", linestyle="--")
+        ax2.set_ylabel("Accuracy", color="green")
+        ax2.tick_params(axis='y', labelcolor="green")
+        ax2.legend(loc="upper right")
+
+        # Set title and layout
+        plt.title("Training and Validation Loss & Accuracy")
+        plt.tight_layout()
+
+        # Display the plot in Streamlit
+        streamlit.pyplot(fig)
