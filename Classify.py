@@ -151,7 +151,7 @@ class Classify:
                 preds = (outputs.round() ).float()  # Predictions based on threshold
                 correct_train += (preds == y_batch).all(dim=1).sum().item()  # Correctly classified samples
                 total_train += y_batch.size(0)  # Total samples in batch
-                all_preds.append(preds.cpu().numpy())
+                all_preds.append(preds.detach().cpu().numpy())
                 all_labels.append(y_batch.cpu().numpy())
 
             avg_train_loss = running_loss / len(train_loader)
@@ -179,7 +179,7 @@ class Classify:
                     preds = (outputs.round()).float()  # Predictions based on threshold
                     correct_val += (preds == y_v).all(dim=1).sum().item()
                     total_val += y_v.size(0)
-                    val_pred.append(preds.cpu().numpy())
+                    val_pred.append(preds.detach().cpu().numpy())
                     val_labels.append(y_v.cpu().numpy())
 
             avg_val_loss = val_running_loss / len(val_loader)
@@ -207,10 +207,10 @@ class Classify:
         with torch.no_grad():
             for X_batch, y_batch in test_loader:
                 outputs = model(X_batch)
-                preds = (outputs >= threshold).float()  # Predictions based on threshold
+                preds = (outputs.rount()).float()  # Predictions based on threshold
                 correct += (preds == y_batch).all(dim=1).sum().item()
                 total += y_batch.size(0)
-                all_preds.append(preds.cpu().numpy())
+                all_preds.append(preds.detach().cpu().numpy())
                 all_labels.append(y_batch.cpu().numpy())
 
         class_report = classification_report(np.vstack(all_labels), np.vstack(all_preds),
