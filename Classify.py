@@ -216,9 +216,11 @@ class Classify:
         class_report = classification_report(np.vstack(all_labels), np.vstack(all_preds),
                                              target_names=labels,
                                              zero_division=0)
+
         streamlit.write(f"Hamming loss:\n{hamming_loss(np.vstack(all_labels), np.vstack(all_preds))}")
         streamlit.write(f"Hamming Acc:\n{self.hamming_score(np.vstack(all_labels), np.vstack(all_preds))}")
-        streamlit.write(f"Classification Report:\n{class_report}")
+        streamlit.write("Classification Report:")
+        streamlit.code(class_report)
         return "Test Accuracy:" + str(correct / total)
 
     def hamming_score(self,y_true, y_pred):
