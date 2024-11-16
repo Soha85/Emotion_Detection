@@ -148,7 +148,7 @@ class Classify:
 
                 running_loss += loss.item()
                 # Compute accuracy (multi-label classification)
-                preds = (outputs >= threshold).float()  # Predictions based on threshold
+                preds = (outputs.round() ).float()  # Predictions based on threshold
                 correct_train += (preds == y_batch).all(dim=1).sum().item()  # Correctly classified samples
                 total_train += y_batch.size(0)  # Total samples in batch
                 all_preds.append(preds.cpu().numpy())
@@ -176,7 +176,7 @@ class Classify:
 
                     val_running_loss += loss.item()
                     # Compute accuracy
-                    preds = (outputs >= threshold).float()  # Predictions based on threshold
+                    preds = (outputs.round()).float()  # Predictions based on threshold
                     correct_val += (preds == y_v).all(dim=1).sum().item()
                     total_val += y_v.size(0)
                     val_pred.append(preds.cpu().numpy())
