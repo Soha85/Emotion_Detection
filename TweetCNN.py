@@ -14,7 +14,7 @@ class TweetCNN(nn.Module):
 
         # Adjusted fully connected layer input size to match flattened size
         self.fc = nn.Linear(64 * 192, num_classes)  # Output size matches number of classes (11)
-        self.dropout = nn.Dropout(0.5)
+        self.dropout = nn.Dropout(0.1)
 
     # Ensure the forward method is correctly defined here
     def forward(self, x):

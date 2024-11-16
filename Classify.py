@@ -108,19 +108,19 @@ class Classify:
     def BertCNNBuildModel(self,embed_dim,num_classes):
         model = TweetCNN(embed_dim=embed_dim, num_classes=num_classes)
         criterion = nn.BCEWithLogitsLoss()
-        optimizer = optim.Adam(model.parameters(), lr=1e-5)
+        optimizer = optim.Adam(model.parameters(), lr=1e-3)
         return model,criterion,optimizer
 
     def TransformerBuildModel(self,embed_dim,num_classes):
         model = TransformerOnBertEmbeddings(embed_dim=embed_dim, num_classes=num_classes)
         criterion = nn.BCEWithLogitsLoss()
-        optimizer = optim.Adam(model.parameters(), lr=1e-5)
+        optimizer = optim.Adam(model.parameters(), lr=1e-3)
         return model,criterion,optimizer
 
     def LSTMBuildModel(self,embed_dim,lstm_hidden_dim,num_classes):
         model = LSTMOnBertEmbeddings(embed_dim=embed_dim, lstm_hidden_dim=lstm_hidden_dim, num_classes=num_classes)
         criterion = nn.BCEWithLogitsLoss()
-        optimizer = optim.Adam(model.parameters(), lr=1e-5)
+        optimizer = optim.Adam(model.parameters(), lr=1e-3)
         return model,criterion,optimizer
 
     def TrainModel(self, model, criterion, optimizer, num_epochs, train_loader, val_loader, threshold=0.5):
