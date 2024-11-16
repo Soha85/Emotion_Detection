@@ -7,10 +7,10 @@ class TweetCNN(nn.Module):
         super(TweetCNN, self).__init__()
 
         self.conv1 = nn.Conv1d(in_channels=1, out_channels=128, kernel_size=5, padding=1)
-        self.pool1 = nn.MaxPool1d(kernel_size=3, stride=2)
+        self.pool1 = nn.MaxPool1d(kernel_size=3, stride=1)
 
         self.conv2 = nn.Conv1d(in_channels=128, out_channels=64, kernel_size=3, padding=1)
-        self.pool2 = nn.MaxPool1d(kernel_size=2, stride=2)
+        self.pool2 = nn.MaxPool1d(kernel_size=2, stride=1)
 
         # Adjusted fully connected layer input size to match flattened size
         self.fc = nn.Linear(64 * 192, num_classes)  # Output size matches number of classes (11)
