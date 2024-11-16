@@ -207,7 +207,7 @@ class Classify:
         with torch.no_grad():
             for X_batch, y_batch in test_loader:
                 outputs = model(X_batch)
-                preds = (outputs.rount()).float()  # Predictions based on threshold
+                preds = (outputs.round()).float()  # Predictions based on threshold
                 correct += (preds == y_batch).all(dim=1).sum().item()
                 total += y_batch.size(0)
                 all_preds.append(preds.detach().cpu().numpy())
