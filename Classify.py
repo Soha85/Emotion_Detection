@@ -86,9 +86,9 @@ class Classify:
         #X_train, X_test, y_train, y_test = train_test_split(tweets_embeddings, labels, test_size=test_size, random_state=42)
         # First split: Split data into training and temporary sets
         X_train, X_temp, y_train, y_temp = train_test_split(tweets_embeddings, labels,
-                                                            test_size=(test_size * 2), random_state=42,stratify=labels)
+                                                            test_size=(test_size * 2), random_state=42)
         # Second split: Split the temporary set into validation and test sets
-        X_val, X_test, y_val, y_test = train_test_split(X_temp, y_temp, test_size=test_size, random_state=42,stratify=y_temp)
+        X_val, X_test, y_val, y_test = train_test_split(X_temp, y_temp, test_size=test_size, random_state=42)
 
         # Convert data to PyTorch tensors
         X_train, X_test, X_val = torch.tensor(X_train, dtype=torch.float32), torch.tensor(X_test, dtype=torch.float32), torch.tensor(X_val, dtype=torch.float32)
