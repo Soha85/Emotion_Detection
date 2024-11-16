@@ -6,7 +6,7 @@ class TweetCNN(nn.Module):
     def __init__(self, embed_dim, num_classes):
         super(TweetCNN, self).__init__()
 
-        self.conv1 = nn.Conv1d(in_channels=1, out_channels=128, kernel_size=5, padding=1)
+        self.conv1 = nn.Conv1d(in_channels=1, out_channels=128, kernel_size=5, padding=2)
         self.pool1 = nn.MaxPool1d(kernel_size=3, stride=2)
 
         self.conv2 = nn.Conv1d(in_channels=128, out_channels=64, kernel_size=5, padding=1)
