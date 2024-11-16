@@ -233,6 +233,7 @@ class Classify:
             else:
                 scores.append(np.sum(np.logical_and(true, pred)) / np.sum(np.logical_or(true, pred)))
         return np.mean(scores)
+
     def plot_curves(self,train_losses, val_losses, train_acc, val_acc):
         epochs = range(1, len(train_losses) + 1)
 
